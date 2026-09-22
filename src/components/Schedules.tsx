@@ -37,7 +37,7 @@ export default function Schedules() {
       notes: "Turno vespertino exclusivo para adultos",
     },
     {
-      day: "Domingos",
+      day: "Domingo",
       ageGroup: "Niños de 4 años en adelante y adultos",
       time: "8:00 AM",
       category: "Infantil / Adultos",
@@ -155,7 +155,7 @@ export default function Schedules() {
 
           <span className="text-xs font-semibold px-3 py-1 bg-white text-blue-700 rounded-full border border-blue-200">
             {selectedBranch === "utesa"
-              ? "Lunes, Viernes, Sábados y Domingos"
+              ? "Lunes, Viernes, Sábados y Domingo"
               : "Viernes y Sábados"}
           </span>
         </div>
