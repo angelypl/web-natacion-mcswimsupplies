@@ -10,24 +10,38 @@ export default function Schedules() {
   const utesaSchedules = [
     {
       day: "Lunes",
-      ageGroup: "4 años en adelante",
+      ageGroup: "Niños de 4 años en adelante y adultos",
       time: "5:00 PM",
-      category: "Infantil / Juvenil",
-      notes: "Técnica, brazada y respiración",
+      category: "Infantil / Adultos",
+      notes: "Grupo mixto de niños y adultos",
     },
     {
       day: "Lunes",
-      ageGroup: "4 años en adelante",
+      ageGroup: "Niños de 4 años en adelante y adultos",
       time: "6:00 PM",
       category: "Infantil / Adultos",
-      notes: "Acondicionamiento y estilos",
+      notes: "Grupo mixto de niños y adultos",
+    },
+    {
+      day: "Viernes",
+      ageGroup: "Adultos",
+      time: "8:00 PM",
+      category: "Adultos",
+      notes: "Turno nocturno exclusivo para adultos",
+    },
+    {
+      day: "Sábados",
+      ageGroup: "Adultos",
+      time: "2:00 PM",
+      category: "Adultos",
+      notes: "Turno vespertino exclusivo para adultos",
     },
     {
       day: "Domingos",
-      ageGroup: "4 años en adelante",
+      ageGroup: "Niños de 4 años en adelante y adultos",
       time: "8:00 AM",
-      category: "Matutino Intensivo",
-      notes: "Piscina semiolímpica en carriles",
+      category: "Infantil / Adultos",
+      notes: "Grupo mixto de niños y adultos",
     },
   ];
 
@@ -140,7 +154,9 @@ export default function Schedules() {
           </div>
 
           <span className="text-xs font-semibold px-3 py-1 bg-white text-blue-700 rounded-full border border-blue-200">
-            {selectedBranch === "utesa" ? "Lunes y Domingos" : "Viernes y Sábados"}
+            {selectedBranch === "utesa"
+              ? "Lunes, Viernes, Sábados y Domingos"
+              : "Viernes y Sábados"}
           </span>
         </div>
 
