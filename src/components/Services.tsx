@@ -14,6 +14,7 @@ const programs = [
     price: "RD$3,000",
     period: "/mes",
     image: "/GM105963.jpg",
+    imagePosition: "object-top",
     description:
       "Programa especial de iniciación con acompañamiento cercano en piscina adaptada para que los más pequeños desarrollen afinidad y seguridad natural en el agua.",
     benefits: [
@@ -34,6 +35,7 @@ const programs = [
     price: "RD$2,500",
     period: "/mes",
     image: "/MCB08820.jpg",
+    imagePosition: "object-center",
     description:
       "Clases regulares divididas por niveles de aprendizaje para perfeccionar la técnica de brazada, patada, flotabilidad y resistencia cardiovascular.",
     benefits: [
@@ -54,6 +56,7 @@ const programs = [
     price: "RD$2,500",
     period: "/mes",
     image: "/91559E05-DA44-45B9-9DB4-EDBE0E1853A8.jpeg",
+    imagePosition: "object-center",
     description:
       "Supera el miedo al agua desde cero o perfecciona tu técnica y velocidad en carriles semiolímpicos con planes adaptados a tu ritmo de vida.",
     benefits: [
@@ -127,7 +130,7 @@ export default function Services() {
                   src={prog.image}
                   alt={prog.title}
                   fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  className={`object-cover ${prog.imagePosition} transition-transform duration-700 hover:scale-105`}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 pointer-events-none" />
