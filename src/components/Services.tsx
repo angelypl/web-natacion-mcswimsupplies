@@ -13,7 +13,7 @@ const programs = [
     age: "2 a 3 años",
     price: "RD$3,000",
     period: "/mes",
-    image: "/MCB07464.jpg",
+    image: "/GM105963.jpg",
     description:
       "Programa especial de iniciación con acompañamiento cercano en piscina adaptada para que los más pequeños desarrollen afinidad y seguridad natural en el agua.",
     benefits: [
@@ -202,7 +202,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Certified Instructors Spotlight Card using GM106022.jpg */}
+        {/* Certified Instructors Spotlight Card using GM106103.jpg */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -213,11 +213,11 @@ export default function Services() {
           <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-            {/* Image Column using GM106022.jpg */}
+            {/* Image Column using GM106103.jpg */}
             <div className="lg:col-span-6 order-2 lg:order-1">
               <div className="relative aspect-[16/10] rounded-2xl overflow-hidden shadow-xl border-2 border-white/20">
                 <Image
-                  src="/GM106022.jpg"
+                  src="/GM106103.jpg"
                   alt="Equipo de instructores certificados MC Swim Academy"
                   fill
                   className="object-cover"
