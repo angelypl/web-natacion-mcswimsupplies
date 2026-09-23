@@ -1,0 +1,67 @@
+// use prisma-8
+
+model Branch {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  address String?
+  notes   String?
+
+  swimClasses SwimClass[]
+}
+
+model SwimClass {
+  id       Int    @id @default(autoincrement())
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  day      String
+  time     String
+  ageGroup String
+  category String
+  notes    String?
+  capacity Int     @default(20)
+  isActive Boolean @default(true)
+
+  enrollments Enrollment[]
+
+  @@index([branchId])
+}
+
+model Student {
+  id         Int     @id @default(autoincrement())
+  fullName   String
+  phone      String?
+  parentName String?
+  notes      String?
+  createdAt  TimestamptzString @default(now())
+
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id          Int     @id @default(autoincrement())
+  studentId   Int
+  student     Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  swimClassId Int
+  swimClass   SwimClass @relation(fields: [swimClassId], references: [id], onDelete: Cascade)
+
+  startDate DateString
+  isActive  Boolean    @default(true)
+
+  attendanceRecords AttendanceRecord[]
+
+  @@index([studentId])
+  @@index([swimClassId])
+}
+
+model AttendanceRecord {
+  id           Int        @id @default(autoincrement())
+  enrollmentId Int
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  date    DateString
+  present Boolean
+  notes   String?
+
+  @@unique([enrollmentId, date])
+}
