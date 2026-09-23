@@ -1,0 +1,622 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.attendanceRecord",
+    "label": "Create table \"attendanceRecord\"",
+    "summary": "Creates table \"attendanceRecord\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "attendanceRecord"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"attendanceRecord\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"attendanceRecord\"",
+        "sql": "CREATE TABLE \"public\".\"attendanceRecord\" (\n  \"date\" date NOT NULL,\n  \"enrollmentId\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"notes\" text,\n  \"present\" bool NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"attendanceRecord\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.branch",
+    "label": "Create table \"branch\"",
+    "summary": "Creates table \"branch\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "branch"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"branch\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"branch\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"branch\"",
+        "sql": "CREATE TABLE \"public\".\"branch\" (\n  \"address\" text,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"notes\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"branch\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"branch\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.enrollment",
+    "label": "Create table \"enrollment\"",
+    "summary": "Creates table \"enrollment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "enrollment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"enrollment\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"enrollment\"",
+        "sql": "CREATE TABLE \"public\".\"enrollment\" (\n  \"id\" SERIAL NOT NULL,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"startDate\" date NOT NULL,\n  \"studentId\" int4 NOT NULL,\n  \"swimClassId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"enrollment\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.student",
+    "label": "Create table \"student\"",
+    "summary": "Creates table \"student\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "student"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"student\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"student\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"student\"",
+        "sql": "CREATE TABLE \"public\".\"student\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"fullName\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"notes\" text,\n  \"parentName\" text,\n  \"phone\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"student\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"student\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.swimClass",
+    "label": "Create table \"swimClass\"",
+    "summary": "Creates table \"swimClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "swimClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"swimClass\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"swimClass\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"swimClass\"",
+        "sql": "CREATE TABLE \"public\".\"swimClass\" (\n  \"ageGroup\" text NOT NULL,\n  \"branchId\" int4 NOT NULL,\n  \"capacity\" int4 DEFAULT 20 NOT NULL,\n  \"category\" text NOT NULL,\n  \"day\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"notes\" text,\n  \"time\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"swimClass\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"swimClass\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.attendanceRecord.attendanceRecord_enrollmentId_date_key",
+    "label": "Add unique constraint on \"attendanceRecord\" (enrollmentId, date)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "attendanceRecord_enrollmentId_date_key",
+        "table": "attendanceRecord"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"attendanceRecord_enrollmentId_date_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "attendanceRecord_enrollmentId_date_key",
+          "public",
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"attendanceRecord_enrollmentId_date_key\"",
+        "sql": "ALTER TABLE \"public\".\"attendanceRecord\" ADD CONSTRAINT \"attendanceRecord_enrollmentId_date_key\" UNIQUE (\"enrollmentId\", \"date\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"attendanceRecord_enrollmentId_date_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "attendanceRecord_enrollmentId_date_key",
+          "public",
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.branch.branch_name_key",
+    "label": "Add unique constraint on \"branch\" (name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "branch_name_key",
+        "table": "branch"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"branch_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "branch_name_key",
+          "public",
+          "\"public\".\"branch\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"branch_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"branch\" ADD CONSTRAINT \"branch_name_key\" UNIQUE (\"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"branch_name_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "branch_name_key",
+          "public",
+          "\"public\".\"branch\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.attendanceRecord.attendanceRecord_enrollmentId_idx_ee5e79c5",
+    "label": "Create index \"attendanceRecord_enrollmentId_idx_ee5e79c5\" on \"attendanceRecord\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "attendanceRecord_enrollmentId_idx_ee5e79c5",
+        "table": "attendanceRecord"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"attendanceRecord_enrollmentId_idx_ee5e79c5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"attendanceRecord_enrollmentId_idx_ee5e79c5\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"attendanceRecord_enrollmentId_idx_ee5e79c5\"",
+        "sql": "CREATE INDEX \"attendanceRecord_enrollmentId_idx_ee5e79c5\" ON \"public\".\"attendanceRecord\" (\"enrollmentId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"attendanceRecord_enrollmentId_idx_ee5e79c5\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"attendanceRecord_enrollmentId_idx_ee5e79c5\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.enrollment.enrollment_studentId_idx_bf255322",
+    "label": "Create index \"enrollment_studentId_idx_bf255322\" on \"enrollment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "enrollment_studentId_idx_bf255322",
+        "table": "enrollment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"enrollment_studentId_idx_bf255322\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment_studentId_idx_bf255322\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"enrollment_studentId_idx_bf255322\"",
+        "sql": "CREATE INDEX \"enrollment_studentId_idx_bf255322\" ON \"public\".\"enrollment\" (\"studentId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"enrollment_studentId_idx_bf255322\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment_studentId_idx_bf255322\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.enrollment.enrollment_swimClassId_idx_281360f5",
+    "label": "Create index \"enrollment_swimClassId_idx_281360f5\" on \"enrollment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "enrollment_swimClassId_idx_281360f5",
+        "table": "enrollment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"enrollment_swimClassId_idx_281360f5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment_swimClassId_idx_281360f5\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"enrollment_swimClassId_idx_281360f5\"",
+        "sql": "CREATE INDEX \"enrollment_swimClassId_idx_281360f5\" ON \"public\".\"enrollment\" (\"swimClassId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"enrollment_swimClassId_idx_281360f5\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"enrollment_swimClassId_idx_281360f5\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.swimClass.swimClass_branchId_idx_d04da5bb",
+    "label": "Create index \"swimClass_branchId_idx_d04da5bb\" on \"swimClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "swimClass_branchId_idx_d04da5bb",
+        "table": "swimClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"swimClass_branchId_idx_d04da5bb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"swimClass_branchId_idx_d04da5bb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"swimClass_branchId_idx_d04da5bb\"",
+        "sql": "CREATE INDEX \"swimClass_branchId_idx_d04da5bb\" ON \"public\".\"swimClass\" (\"branchId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"swimClass_branchId_idx_d04da5bb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"swimClass_branchId_idx_d04da5bb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.attendanceRecord.attendanceRecord_enrollmentId_fkey",
+    "label": "Add foreign key \"attendanceRecord_enrollmentId_fkey\" on \"attendanceRecord\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "attendanceRecord_enrollmentId_fkey",
+        "table": "attendanceRecord"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"attendanceRecord_enrollmentId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "attendanceRecord_enrollmentId_fkey",
+          "public",
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"attendanceRecord_enrollmentId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"attendanceRecord\"\nADD CONSTRAINT \"attendanceRecord_enrollmentId_fkey\"\nFOREIGN KEY (\"enrollmentId\")\nREFERENCES \"public\".\"enrollment\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"attendanceRecord_enrollmentId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "attendanceRecord_enrollmentId_fkey",
+          "public",
+          "\"public\".\"attendanceRecord\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.enrollment.enrollment_studentId_fkey",
+    "label": "Add foreign key \"enrollment_studentId_fkey\" on \"enrollment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "enrollment_studentId_fkey",
+        "table": "enrollment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"enrollment_studentId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "enrollment_studentId_fkey",
+          "public",
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"enrollment_studentId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"enrollment\"\nADD CONSTRAINT \"enrollment_studentId_fkey\"\nFOREIGN KEY (\"studentId\")\nREFERENCES \"public\".\"student\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"enrollment_studentId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "enrollment_studentId_fkey",
+          "public",
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.enrollment.enrollment_swimClassId_fkey",
+    "label": "Add foreign key \"enrollment_swimClassId_fkey\" on \"enrollment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "enrollment_swimClassId_fkey",
+        "table": "enrollment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"enrollment_swimClassId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "enrollment_swimClassId_fkey",
+          "public",
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"enrollment_swimClassId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"enrollment\"\nADD CONSTRAINT \"enrollment_swimClassId_fkey\"\nFOREIGN KEY (\"swimClassId\")\nREFERENCES \"public\".\"swimClass\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"enrollment_swimClassId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "enrollment_swimClassId_fkey",
+          "public",
+          "\"public\".\"enrollment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.swimClass.swimClass_branchId_fkey",
+    "label": "Add foreign key \"swimClass_branchId_fkey\" on \"swimClass\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "swimClass_branchId_fkey",
+        "table": "swimClass"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"swimClass_branchId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "swimClass_branchId_fkey",
+          "public",
+          "\"public\".\"swimClass\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"swimClass_branchId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"swimClass\"\nADD CONSTRAINT \"swimClass_branchId_fkey\"\nFOREIGN KEY (\"branchId\")\nREFERENCES \"public\".\"branch\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"swimClass_branchId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "swimClass_branchId_fkey",
+          "public",
+          "\"public\".\"swimClass\""
+        ]
+      }
+    ]
+  }
+]
