@@ -18,6 +18,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Panel de administración
+
+Este proyecto incluye un panel `/admin` (horarios, estudiantes, asistencia)
+respaldado por Postgres + Prisma 8. **`/admin` no tiene autenticación
+todavía — es intencional para esta fase.** Ver
+[`docs/admin.md`](docs/admin.md) para cómo levantar la base de datos local,
+correr migraciones y el seed.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
