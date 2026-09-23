@@ -45,10 +45,3 @@ export async function deleteStudent(id: number) {
   revalidatePath("/admin");
   redirect("/admin/estudiantes");
 }
-
-export async function deactivateEnrollment(enrollmentId: number, studentId: number) {
-  await db.orm.public.Enrollment.where({ id: enrollmentId }).update({ isActive: false });
-  revalidatePath(`/admin/estudiantes/${studentId}`);
-  revalidatePath("/admin/horarios");
-  revalidatePath("/admin");
-}
