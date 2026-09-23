@@ -93,18 +93,28 @@ adicional en desarrollo.
 ## Despliegue en Railway
 
 1. Agrega el plugin de Postgres al proyecto de Railway (esto provee
-   `DATABASE_URL` automáticamente como variable de entorno).
-2. Asegúrate de que `DATABASE_URL` esté disponible en el build (Railway
-   normalmente inyecta las variables del proyecto tanto en build como en
-   runtime).
-3. Corre las migraciones contra la base de producción antes de (o durante)
-   el deploy:
-   ```bash
-   npx prisma db migrate
+   `DATABASE_URL` automáticamente como variable de entorno) y confirma que
+   quedó enlazada al servicio web (no solo creada como recurso suelto).
+2. `package.json` tiene `"postinstall": "prisma contract emit"` — regenera
+   `contract.json`/`contract.d.ts` en cada `npm install` del build. No
+   necesita `DATABASE_URL` (no toca la base de datos).
+3. `railway.toml` corre las migraciones antes de arrancar el servidor:
+   ```toml
+   [deploy]
+   startCommand = "npx prisma db migrate && npm run start"
    ```
-   Puedes hacerlo desde un paso de build/release de Railway, o manualmente
-   la primera vez con `DATABASE_URL` de producción en el entorno.
-4. La página pública (`/`) se genera de forma estática en el build, pero
+   `prisma db migrate` es la versión de Prisma 8 de lo que en Prisma
+   clásico sería `prisma migrate deploy` — aplica `migrations/app/*`
+   pendientes contra `DATABASE_URL` y no hace nada si ya está al día
+   (seguro de correr en cada deploy).
+4. El seed (`npm run db:seed`) **no** corre automáticamente en el deploy.
+   Es idempotente (usa `upsert` en `Branch` y se salta los horarios si
+   `SwimClass` ya tiene filas), así que es seguro re-ejecutarlo, pero
+   está pensado como paso manual único la primera vez:
+   ```bash
+   railway run npm run db:seed
+   ```
+5. La página pública (`/`) se genera de forma estática en el build, pero
    cualquier cambio hecho desde `/admin` (crear/activar/desactivar clases)
    llama a `revalidatePath('/')`, así que el sitio público se actualiza sin
    necesidad de un nuevo deploy.
