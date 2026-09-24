@@ -20,7 +20,14 @@ export type BranchSchedule = {
   schedules: ScheduleItem[];
 };
 
-export default function SchedulesClient({ branches }: { branches: BranchSchedule[] }) {
+export default function SchedulesClient({
+  branches,
+  unavailable = false,
+}: {
+  branches: BranchSchedule[];
+  /** La API de horarios no respondió: se muestra el respaldo por WhatsApp. */
+  unavailable?: boolean;
+}) {
   const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(branches[0]?.id);
   const selectedBranch = branches.find((b) => b.id === selectedBranchId) ?? branches[0];
   const currentSchedules = selectedBranch?.schedules ?? [];
@@ -44,6 +51,31 @@ export default function SchedulesClient({ branches }: { branches: BranchSchedule
             Clases para niños desde los 2 años y adultos organizadas para que aproveches al máximo cada sesión.
           </p>
         </div>
+
+        {/* Fallback when the schedules API is unavailable */}
+        {unavailable && (
+          <div className="max-w-2xl mx-auto mb-12 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-md shadow-blue-900/5 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-blue-950 mb-2">
+              Consulta nuestros horarios por WhatsApp
+            </h3>
+            <p className="text-slate-600 text-sm sm:text-base mb-6">
+              En este momento no pudimos cargar los horarios. Escríbenos y te compartimos los turnos y cupos
+              disponibles en Utesa y VivirMás.
+            </p>
+            <a
+              href="https://wa.me/18298830129?text=Hola%20MC%20Swim%20Academy%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20horarios%20disponibles."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm shadow-md shadow-green-500/30 transition-all active:scale-95"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Consultar horarios por WhatsApp</span>
+            </a>
+          </div>
+        )}
 
         {/* Branch Selector Tabs */}
         {branches.length > 0 && (
