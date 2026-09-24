@@ -6,6 +6,9 @@ API pública del sistema de gestión de clases,
 [mcswim-admin](https://github.com/angelypl/mcswim-admin), que es el único
 dueño de los datos.
 
+- **Producción:** https://mc-swim-academy-production-3238.up.railway.app
+- **API de horarios:** https://mcswim-admin-production.up.railway.app/api/public/schedules
+
 ## Desarrollo local
 
 ```bash
