@@ -1,44 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MC Swim Academy · Web pública
 
-## Getting Started
+Sitio público de MC Swim Academy (Next.js 16 · React 19 · Tailwind 4).
+No tiene base de datos: los horarios de la sección **Horarios** se leen de la
+API pública del sistema de gestión de clases,
+[mcswim-admin](https://github.com/angelypl/mcswim-admin), que es el único
+dueño de los datos.
 
-First, run the development server:
+## Desarrollo local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # ADMIN_API_URL=http://localhost:3001
+npm install
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Para ver horarios reales en local, levanta también `mcswim-admin` en el
+puerto 3001 (ver su README). Sin él, la sección de horarios muestra el
+respaldo "Consulta nuestros horarios por WhatsApp". El resto de la página
+funciona igual.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cómo se obtienen los horarios
 
-## Panel de administración
+`src/components/Schedules.tsx` (Server Component) hace
+`GET ${ADMIN_API_URL}/api/public/schedules`:
 
-Este proyecto incluye un panel `/admin` (horarios, estudiantes, asistencia)
-respaldado por Postgres + Prisma 8. **`/admin` no tiene autenticación
-todavía — es intencional para esta fase.** Ver
-[`docs/admin.md`](docs/admin.md) para cómo levantar la base de datos local,
-correr migraciones y el seed.
+- **Revalidación cada 60 s:** la home se sirve desde caché y se regenera en
+  segundo plano, así que un cambio hecho en el sistema de gestión aparece en
+  la web en un minuto como mucho.
+- **Timeout de 4 s:** si la API falla, tarda o `ADMIN_API_URL` no está
+  definida, la sección muestra el respaldo con el botón de WhatsApp. La home
+  nunca se cae por esto.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables de entorno
 
-## Learn More
+| Variable | Uso |
+| --- | --- |
+| `ADMIN_API_URL` | URL base del sistema de gestión (sin `/` final). En producción, la URL pública del servicio `mcswim-admin` en Railway. Tiene que estar también durante el build. |
 
-To learn more about Next.js, take a look at the following resources:
+## Despliegue
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Es el servicio `mc-swim-academy` del proyecto **mc-swim-academy** en
+Railway, conectado a este repo con **auto-deploy en cada push a `main`**. No
+hace falta `railway up`. La configuración de los servicios del proyecto
+vive en el repo `mcswim-admin` (`.railway/railway.ts`).
