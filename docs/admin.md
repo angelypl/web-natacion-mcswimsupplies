@@ -114,7 +114,10 @@ adicional en desarrollo.
    ```bash
    railway run npm run db:seed
    ```
-5. La página pública (`/`) se genera de forma estática en el build, pero
-   cualquier cambio hecho desde `/admin` (crear/activar/desactivar clases)
-   llama a `revalidatePath('/')`, así que el sitio público se actualiza sin
-   necesidad de un nuevo deploy.
+5. Ninguna página consulta la base durante `next build`: `/` y `/admin` se
+   renderizan por request (`Schedules.tsx` y el dashboard llaman a
+   `connection()`). Esto es necesario porque en el build de Railway la red
+   privada hacia Postgres no está disponible, y en el primer deploy las
+   tablas todavía no existen (las migraciones corren en el start). El
+   build sí necesita que `DATABASE_URL` esté definida (el cliente valida la
+   URL al importarse), aunque no se conecte.

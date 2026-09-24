@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { db } from "@/prisma/db";
 import { dayMatchesWeekday, todayIsoDate, todayWeekdayName } from "@/lib/weekday";
 
 export default async function AdminDashboardPage() {
+  // Los conteos y "hoy" deben calcularse por request, no en el build.
+  await connection();
   const [activeClasses, activeEnrollments] = await Promise.all([
     db.orm.public.SwimClass.where({ isActive: true }).all(),
     db.orm.public.Enrollment.where({ isActive: true }).select("studentId").all(),

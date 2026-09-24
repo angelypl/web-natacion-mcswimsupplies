@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { db } from "@/prisma/db";
 import { createSwimClass } from "../actions";
 
 const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
 export default async function NuevaClasePage() {
+  await connection();
   const branches = await db.orm.public.Branch.orderBy((b) => b.name.asc()).all();
 
   return (
