@@ -1,5 +1,5 @@
 [build]
 builder = "NIXPACKS"
 
-[deploy]
-startCommand = "npx prisma db migrate && npm run start"
+# Las migraciones corren en el script "start" de package.json
+# (`prisma db migrate && next start`); ver docs/admin.md.

@@ -98,21 +98,25 @@ adicional en desarrollo.
 2. `package.json` tiene `"postinstall": "prisma contract emit"` — regenera
    `contract.json`/`contract.d.ts` en cada `npm install` del build. No
    necesita `DATABASE_URL` (no toca la base de datos).
-3. `railway.toml` corre las migraciones antes de arrancar el servidor:
-   ```toml
-   [deploy]
-   startCommand = "npx prisma db migrate && npm run start"
-   ```
-   `prisma db migrate` es la versión de Prisma 8 de lo que en Prisma
-   clásico sería `prisma migrate deploy` — aplica `migrations/app/*`
-   pendientes contra `DATABASE_URL` y no hace nada si ya está al día
-   (seguro de correr en cada deploy).
+3. El script `start` corre las migraciones antes de arrancar el servidor:
+   `"start": "prisma db migrate && next start"`. `prisma db migrate` es la
+   versión de Prisma 8 de lo que en Prisma clásico sería
+   `prisma migrate deploy` — aplica `migrations/app/*` pendientes contra
+   `DATABASE_URL` y no hace nada si ya está al día (seguro en cada deploy).
+   Va en `package.json` y no en el `startCommand` de `railway.toml`
+   porque Railway no aplicó ese `startCommand` (el primer deploy arrancó
+   con `npm run start` a secas y la base quedó sin tablas). Por eso
+   `prisma` y `tsx` están en `dependencies`: tienen que existir en runtime.
 4. El seed (`npm run db:seed`) **no** corre automáticamente en el deploy.
    Es idempotente (usa `upsert` en `Branch` y se salta los horarios si
    `SwimClass` ya tiene filas), así que es seguro re-ejecutarlo, pero
-   está pensado como paso manual único la primera vez:
+   está pensado como paso manual único la primera vez. Hay que correrlo
+   dentro del contenedor, porque `DATABASE_URL` apunta a la red privada
+   (`postgres.railway.internal`), que no es accesible desde tu máquina con
+   `railway run`:
    ```bash
-   railway run npm run db:seed
+   railway ssh --service mc-swim-academy
+   npm run db:seed
    ```
 5. Ninguna página consulta la base durante `next build`: `/` y `/admin` se
    renderizan por request (`Schedules.tsx` y el dashboard llaman a
