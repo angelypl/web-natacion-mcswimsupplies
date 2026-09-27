@@ -10,6 +10,8 @@ export type ScheduleItem = {
   time: string;
   category: string;
   notes: string | null;
+  /** Clase marcada como llena en el sistema de gestión. */
+  full: boolean;
 };
 
 export type BranchSchedule = {
@@ -148,8 +150,15 @@ export default function SchedulesClient({
                     >
                       <div>
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
-                            {item.day}
+                          <span className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+                              {item.day}
+                            </span>
+                            {item.full && (
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700 ring-1 ring-red-600/20">
+                                Cupo lleno
+                              </span>
+                            )}
                           </span>
                           <span className="text-xs font-medium text-cyan-700 bg-cyan-50 px-2.5 py-0.5 rounded-md">
                             {item.category}
@@ -173,10 +182,14 @@ export default function SchedulesClient({
                       </div>
 
                       <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                          Cupos reducidos
-                        </span>
+                        {item.full ? (
+                          <span className="text-xs text-slate-400 font-medium">Sin cupos por ahora</span>
+                        ) : (
+                          <span className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                            Cupos reducidos
+                          </span>
+                        )}
 
                         <a
                           href={`https://wa.me/18298830129?text=${encodeURIComponent(
@@ -186,7 +199,7 @@ export default function SchedulesClient({
                           rel="noopener noreferrer"
                           className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
                         >
-                          <span>Consultar cupo</span>
+                          <span>{item.full ? "Unirme a lista de espera" : "Consultar cupo"}</span>
                           <span>→</span>
                         </a>
                       </div>

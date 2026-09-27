@@ -11,7 +11,15 @@ type ApiBranch = {
   name: string;
   address: string | null;
   notes: string | null;
-  schedules: { day: string; time: string; ageGroup: string; category: string; notes: string | null }[];
+  schedules: {
+    day: string;
+    time: string;
+    ageGroup: string;
+    category: string;
+    notes: string | null;
+    /** El personal marcó la clase como llena. Opcional: una API anterior no lo envía. */
+    full?: boolean;
+  }[];
 };
 
 async function fetchSchedules(): Promise<BranchSchedule[] | null> {
@@ -42,6 +50,7 @@ async function fetchSchedules(): Promise<BranchSchedule[] | null> {
         time: s.time,
         category: s.category,
         notes: s.notes,
+        full: s.full ?? false,
       })),
     }));
   } catch (error) {
