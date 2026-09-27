@@ -30,6 +30,10 @@ funciona igual.
 - **Revalidación cada 60 s:** la home se sirve desde caché y se regenera en
   segundo plano, así que un cambio hecho en el sistema de gestión aparece en
   la web en un minuto como mucho.
+- **Cupo lleno:** cada horario trae `full` (booleano). Si es `true`, la
+  tarjeta muestra la insignia "Cupo lleno" y el enlace de WhatsApp dice
+  "Unirme a lista de espera". Si la API no envía el campo (versión anterior),
+  se asume `false`.
 - **Timeout de 4 s:** si la API falla, tarda o `ADMIN_API_URL` no está
   definida, la sección muestra el respaldo con el botón de WhatsApp. La home
   nunca se cae por esto.
