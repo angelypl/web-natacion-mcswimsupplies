@@ -67,7 +67,7 @@ export default function Highlight() {
           {/* Overlapping content card */}
           <motion.div
             variants={item}
-            className="lg:col-span-6 lg:-ml-16 xl:-ml-24 relative z-10 mt-6 lg:mt-0"
+            className="lg:col-span-5 lg:-ml-16 xl:-ml-24 relative z-10 mt-6 lg:mt-0"
           >
             <div className="bg-blue-950 text-white rounded-3xl p-8 sm:p-10 lg:p-12 shadow-2xl shadow-blue-950/30 relative overflow-hidden">
               <div className="absolute -right-16 -bottom-16 w-56 h-56 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
