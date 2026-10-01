@@ -22,6 +22,29 @@ puerto 3001 (ver su README). Sin él, la sección de horarios muestra el
 respaldo "Consulta nuestros horarios por WhatsApp". El resto de la página
 funciona igual.
 
+## Imágenes
+
+Las fotos de `public/` deben subirse **ya comprimidas**. `next/image`
+decodifica el original en memoria cada vez que genera una variante nueva, así
+que una foto de cámara de 10–20 MB dispara la RAM del servicio (y lo que
+cobra Railway). Antes de agregar o reemplazar una foto:
+
+1. Redimensiónala a **2048 px en el lado largo** como máximo (ningún
+   contenedor del sitio necesita más, ni en pantallas retina).
+2. Guárdala como JPEG calidad 75–80 (fotos) o PNG sin canal alfa si
+   necesitas PNG. Objetivo: **menos de 500 KB** por foto (1–1.5 MB como
+   máximo para un PNG).
+3. Con el `sharp` que ya trae el proyecto, por ejemplo:
+
+   ```bash
+   node -e "require('sharp')('original.jpg').rotate().resize(2048,2048,{fit:'inside',withoutEnlargement:true}).jpeg({quality:80,mozjpeg:true}).toFile('public/foto.jpg')"
+   ```
+
+4. Si reemplazas una foto existente, usa un **nombre de archivo nuevo**: las
+   variantes optimizadas se cachean una semana (`images.minimumCacheTTL` en
+   `next.config.ts`) y con el mismo nombre algunos visitantes seguirían
+   viendo la anterior.
+
 ## Cómo se obtienen los horarios
 
 `src/components/Schedules.tsx` (Server Component) hace
