@@ -157,7 +157,7 @@ export default function Locations() {
               <div className="space-y-2.5 mb-8 bg-white p-5 rounded-2xl border border-slate-100">
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
                   <Calendar className="w-4 h-4 text-cyan-600" />
-                  <span>Días de clase: <strong>Lunes, viernes y domingos</strong></span>
+                  <span>Días de clase: <strong>Lunes, viernes, sábados y domingos</strong></span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-600">
                   <Check className="w-4 h-4 text-green-600" />

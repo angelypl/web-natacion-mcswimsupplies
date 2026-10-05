@@ -126,7 +126,7 @@ export default function Footer() {
                   Sucursal Utesa
                 </div>
                 <p className="mt-0.5">Av. Isabel Aguiar, Sto. Dgo. Oeste</p>
-                <p className="text-cyan-400 text-[11px] mt-1">Lunes, viernes y domingos</p>
+                <p className="text-cyan-400 text-[11px] mt-1">Lunes, viernes, sábados y domingos</p>
               </div>
 
               <div className="border-l-2 border-cyan-400 pl-3">
