@@ -34,7 +34,7 @@ export default function Locations() {
           </p>
         </div>
 
-        {/* Location Map / Croquis Card using 27-de-febrero.png */}
+        {/* Location card (Av. Isabel Aguiar) */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -59,15 +59,15 @@ export default function Locations() {
                   Santo Domingo, R.D.
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                  Encuéntranos en Av. 27 de Febrero
+                  Encuéntranos en Av. Isabel Aguiar
                 </h3>
                 <p className="text-slate-200 text-xs sm:text-sm max-w-xl mt-1">
-                  Referencia de ubicación central para llegar fácilmente a cualquiera de nuestras dos sucursales.
+                  Av. Isabel Aguiar, Santo Domingo 21243
                 </p>
               </div>
 
               <a
-                href="https://wa.me/18298830129?text=Hola%20MC%20Swim%20Academy%2C%20quiero%20que%20me%20ayuden%20a%20ubicar%20la%20sucursal%20m%C3%A1s%20cercana."
+                href="https://maps.app.goo.gl/xNzEYNQbVzkTGh3J9?g_st=ic"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-xl bg-white text-blue-900 hover:bg-slate-100 font-bold text-xs sm:text-sm shadow-md transition-all self-start sm:self-end flex-shrink-0"
