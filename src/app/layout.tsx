@@ -1,66 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Figtree, Saira_Extra_Condensed } from "next/font/google";
+import { metadataBase } from "@/lib/seo";
 import "./globals.css";
 
-const inter = Inter({
+const figtree = Figtree({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-figtree",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://mcswimacademy.com"),
-  title: "MC Swim Academy | Clases de Natación en Santo Domingo",
-  description:
-    "Academia de natación en Santo Domingo para niños desde 2 años y adultos. Dos sucursales (Utesa y VivirMás), instructores certificados y horarios flexibles.",
-  keywords: [
-    "clases de natacion santo domingo",
-    "academia de natacion republica dominicana",
-    "natacion para ninos",
-    "natacion adultos",
-    "mc swim academy",
-    "piscina semiolimpica utesa",
-    "vivirmas natacion",
-  ],
-  authors: [{ name: "MC Swim Academy" }],
-  openGraph: {
-    title: "MC Swim Academy | Academia de Natación en Santo Domingo",
-    description:
-      "Aprende a nadar con instructores certificados en Santo Domingo. Clases para todas las edades en dos sucursales.",
-    locale: "es_DO",
-    type: "website",
-    siteName: "MC Swim Academy",
-    images: [
-      {
-        url: "/MCB08946.jpg",
-        width: 1200,
-        height: 800,
-        alt: "MC Swim Academy - Academia de Natación",
-      },
-    ],
-  },
-  icons: {
-    icon: "/logo-mc-swim-academy.jpeg",
-    apple: "/logo-mc-swim-academy.jpeg",
-  },
-};
+const saira = Saira_Extra_Condensed({
+  subsets: ["latin"],
+  // Solo 800: es el único peso que usa el sistema y es un archivo menos en el LCP.
+  weight: "800",
+  display: "swap",
+  variable: "--font-saira",
+});
+
+export const metadata: Metadata = metadataBase;
 
 export const viewport: Viewport = {
-  themeColor: "#0284c7",
+  themeColor: "#001a38",
   width: "device-width",
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} scroll-smooth`}>
-      <body className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
-        {children}
-      </body>
+    <html lang="es-DO" className={`${figtree.variable} ${saira.variable}`}>
+      <body className="min-h-screen font-sans antialiased">{children}</body>
     </html>
   );
 }

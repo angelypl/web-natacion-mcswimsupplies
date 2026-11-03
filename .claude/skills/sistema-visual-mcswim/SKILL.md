@@ -38,7 +38,7 @@ La referencia viva está en `/styleguide` (noindex). Los tokens están en `@them
 - `piscina-400`, `turquesa-400`, `agua-300` y `boya-400` **nunca** como texto sobre claro.
 
 ### Tipografía (`next/font`)
-- **Saira Extra Condensed** 700/800 (`font-display`): titulares en mayúsculas, condensados, estilo de marcador de competencia. Escala `text-display-2xl … sm` con `clamp()`, line-height 0,86–1.
+- **Saira Extra Condensed** 800 (`font-display`, siempre con `font-extrabold`; solo se carga ese peso): titulares en mayúsculas, condensados, estilo de marcador de competencia. Escala `text-display-2xl … sm` con `clamp()`, line-height 0,86–1.
 - **Figtree** variable (`font-sans`): todo el texto. `text-lead` para entradillas.
 - Horas y precios: `font-display` + `tabular-nums`.
 - No agregues otra familia.

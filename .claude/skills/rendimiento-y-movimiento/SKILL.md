@@ -24,7 +24,7 @@ Railway cobra por RAM sostenida. Un solo servicio con fotos sin comprimir llegó
 - Entrada del hero en **CSS puro**; el elemento LCP nunca parte de opacidad 0.
 - Reveal al entrar en vista con el patrón static → armed → play (`src/components/ui/Reveal.tsx`): **sin JS todo se ve**.
 - Scroll-driven (`animation-timeline: view()`) solo dentro de `@supports`; sin soporte, se queda quieto.
-- `framer-motion` solo donde aporte (hojas interactivas), con `LazyMotion` + `m.*` dentro del propio componente.
+- Hoy todo el movimiento de la web es CSS y no hay librería de animación instalada. Si algún día hace falta (gestos, layout animado), usa `motion` con `LazyMotion` + `m.*` dentro de la hoja interactiva que lo necesite, nunca en el layout.
 - Respeta `prefers-reduced-motion` en todo. Animaciones infinitas con pausa y detenidas fuera de pantalla. Inventario en `ANIMACIONES.md`.
 
 ## Panel admin: límites de seguridad

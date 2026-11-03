@@ -1,51 +1,295 @@
 @import "tailwindcss";
 
+/* ───────────────────────── Sistema "Carril" ─────────────────────────
+   Colores medidos del logo y de las fotos reales (ver
+   .claude/skills/sistema-visual-mcswim). Reglas de contraste en /styleguide. */
+@theme {
+  --color-marino-950: #001a38;
+  --color-marino-900: #002b5c;
+  --color-marino-800: #04386a;
+  --color-marino-700: #0a4a86;
+
+  --color-piscina-400: #03a8e8;
+  --color-piscina-500: #0297da;
+  --color-piscina-600: #0277b5;
+  --color-piscina-700: #01659c;
+
+  --color-turquesa-400: #38d4b8;
+  --color-turquesa-700: #0b6f66;
+  --color-agua-300: #7fe9ee;
+
+  --color-boya-300: #f8e27a;
+  --color-boya-400: #f4d23c;
+  --color-corchera-600: #c2304e;
+
+  --color-espuma-50: #f3fafc;
+  --color-espuma-100: #e2f3f7;
+  --color-espuma-200: #c9e7ef;
+
+  --color-tinta-600: #3d5670;
+  --color-tinta-500: #56708a;
+  --color-niebla-300: #a9c3d6;
+
+  --color-whatsapp: #25d366;
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-saira), "Arial Narrow", ui-sans-serif, sans-serif;
+
+  --text-display-2xl: clamp(6rem, 0.5rem + 29vw, 12rem);
+  --text-display-2xl--line-height: 0.84;
+  --text-display-xl: clamp(3rem, 1.6rem + 6.4vw, 7.5rem);
+  --text-display-xl--line-height: 0.88;
+  --text-display-lg: clamp(2.5rem, 1.6rem + 4vw, 5rem);
+  --text-display-lg--line-height: 0.92;
+  --text-display-md: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
+  --text-display-md--line-height: 0.96;
+  --text-display-sm: clamp(1.5rem, 1.25rem + 1.1vw, 2.125rem);
+  --text-display-sm--line-height: 1;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.45vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+
+  --radius-pill: 9999px;
+  --radius-card: 1.5rem;
+  --radius-blob: 2.5rem;
+
+  --shadow-flota: 0 1px 2px rgb(0 26 56 / 0.06), 0 8px 24px -8px rgb(0 26 56 / 0.18);
+  --shadow-hondo: 0 2px 4px rgb(0 26 56 / 0.08), 0 28px 60px -18px rgb(0 26 56 / 0.45);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring-soft: cubic-bezier(0.34, 1.32, 0.64, 1);
+  --ease-spring: linear(0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017 19.4%, 1.067, 1.099 24.3%, 1.108 26%, 1.1 27.9%, 1.06 32.4%, 0.996 41.4%, 0.982 45.1%, 0.98 48.5%, 0.992 59.3%, 1);
+}
+
+/* Variables de tono: cada sección fija las suyas y los hijos usan
+   text-tone-fg, bg-tone-bg, border-tone-line… */
+@theme inline {
+  --color-tone-bg: var(--tone-bg);
+  --color-tone-fg: var(--tone-fg);
+  --color-tone-muted: var(--tone-muted);
+  --color-tone-accent: var(--tone-accent);
+  --color-tone-focus: var(--tone-focus);
+  --color-tone-line: var(--tone-line);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --dur-rapida: 150ms;
+  --dur-base: 250ms;
+  --dur-lenta: 500ms;
+  --dur-escena: 900ms;
+}
+
+:root,
+[data-tone="espuma"] {
+  --tone-bg: var(--color-espuma-50);
+  --tone-fg: var(--color-marino-950);
+  --tone-muted: var(--color-tinta-600);
+  --tone-accent: var(--color-piscina-700);
+  --tone-focus: var(--color-piscina-700);
+  --tone-line: rgb(0 26 56 / 0.12);
+}
+
+[data-tone="blanco"] {
+  --tone-bg: #ffffff;
+  --tone-fg: var(--color-marino-950);
+  --tone-muted: var(--color-tinta-600);
+  --tone-accent: var(--color-piscina-700);
+  --tone-focus: var(--color-piscina-700);
+  --tone-line: rgb(0 26 56 / 0.12);
+}
+
+[data-tone="marino"] {
+  --tone-bg: var(--color-marino-900);
+  --tone-fg: var(--color-espuma-50);
+  --tone-muted: var(--color-niebla-300);
+  --tone-accent: var(--color-turquesa-400);
+  --tone-focus: var(--color-boya-400);
+  --tone-line: rgb(243 250 252 / 0.16);
+}
+
+[data-tone="abismo"] {
+  --tone-bg: var(--color-marino-950);
+  --tone-fg: var(--color-espuma-50);
+  --tone-muted: var(--color-niebla-300);
+  --tone-accent: var(--color-turquesa-400);
+  --tone-focus: var(--color-boya-400);
+  --tone-line: rgb(243 250 252 / 0.14);
+}
+
+/* Sobre azul piscina el texto es marino: blanco no pasa AA (3,26). */
+[data-tone="piscina"] {
+  --tone-bg: var(--color-piscina-500);
+  --tone-fg: var(--color-marino-950);
+  --tone-muted: var(--color-marino-950);
+  --tone-accent: var(--color-marino-950);
+  --tone-focus: var(--color-marino-950);
+  --tone-line: rgb(0 26 56 / 0.22);
+}
+
+[data-tone="boya"] {
+  --tone-bg: var(--color-boya-400);
+  --tone-fg: var(--color-marino-950);
+  --tone-muted: var(--color-marino-800);
+  --tone-accent: var(--color-marino-800);
+  --tone-focus: var(--color-marino-950);
+  --tone-line: rgb(0 26 56 / 0.2);
+}
+
+[data-tone] {
+  color: var(--tone-fg);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  background: #ffffff;
-  color: #0f172a;
-  overflow-x: hidden;
+  background: var(--color-espuma-50);
+  color: var(--color-marino-950);
+  overflow-x: clip;
+  touch-action: manipulation;
 }
 
-/* Custom smooth scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+:focus-visible {
+  outline: 3px solid var(--tone-focus);
+  outline-offset: 3px;
 }
 
-::-webkit-scrollbar-track {
-  background: #f8fafc;
+::selection {
+  background: var(--color-boya-400);
+  color: var(--color-marino-950);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 5px;
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+p {
+  text-wrap: pretty;
 }
 
-@keyframes waterWave {
-  0%, 100% {
-    transform: translateY(0px);
+/* ───────────────────────── Motion ───────────────────────── */
+
+@keyframes subir {
+  from {
+    transform: translateY(0.35em);
   }
-  50% {
-    transform: translateY(-8px);
+  to {
+    transform: none;
   }
 }
 
-.animate-water-float {
-  animation: waterWave 6s ease-in-out infinite;
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.animate-water-float-delayed {
-  animation: waterWave 7s ease-in-out infinite 1.5s;
+@keyframes trazar {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Reveal: static → armed → play. Sin JS no hay data-reveal-state y todo
+   se ve. RevealRoot arma solo lo que está fuera de la pantalla. */
+[data-reveal-state="armed"] {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+
+[data-reveal-state="play"] {
+  animation: aparecer var(--dur-escena) var(--ease-out-expo) both;
+  animation-delay: calc(var(--reveal-i, 0) * 90ms);
+}
+
+/* Parallax de las fotos tipo sticker y corchera ligada al scroll: solo con
+   scroll-driven nativo. Sin soporte se quedan quietas. */
+@supports (animation-timeline: view()) {
+  @keyframes flotar-lento {
+    from {
+      transform: translateY(var(--parallax, 2.5rem)) rotate(var(--giro, 0deg));
+    }
+    to {
+      transform: translateY(calc(var(--parallax, 2.5rem) * -1)) rotate(var(--giro, 0deg));
+    }
+  }
+
+  .parallax {
+    animation: flotar-lento linear both;
+    animation-timeline: view();
+  }
+
+  @keyframes deslizar-corchera {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
+  }
+
+  .corchera-scroll {
+    animation: deslizar-corchera linear both;
+    animation-timeline: view();
+  }
+
+  @keyframes cabecera-solida {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .cabecera-fondo {
+    opacity: 0;
+    animation: cabecera-solida linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-reveal-state="armed"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .parallax,
+  .corchera-scroll {
+    animation: none !important;
+    transform: rotate(var(--giro, 0deg));
+  }
+
+  .cabecera-fondo {
+    animation: none !important;
+    opacity: 1;
+  }
 }
