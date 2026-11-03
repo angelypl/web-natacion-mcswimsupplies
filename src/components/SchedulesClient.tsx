@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Clock, MapPin, Calendar, CheckCircle2, MessageCircle, AlertCircle } from "lucide-react";
+import { useId, useState, type KeyboardEvent } from "react";
+import { Clock, MapPin, MessageCircle } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 export type ScheduleItem = {
   day: string;
@@ -22,219 +22,215 @@ export type BranchSchedule = {
   schedules: ScheduleItem[];
 };
 
-export default function SchedulesClient({
-  branches,
-  unavailable = false,
-}: {
+type Props = {
   branches: BranchSchedule[];
   /** La API de horarios no respondió: se muestra el respaldo por WhatsApp. */
   unavailable?: boolean;
-}) {
-  const [selectedBranchId, setSelectedBranchId] = useState<number | undefined>(branches[0]?.id);
-  const selectedBranch = branches.find((b) => b.id === selectedBranchId) ?? branches[0];
-  const currentSchedules = selectedBranch?.schedules ?? [];
-  const daysSummary = Array.from(new Set(currentSchedules.map((s) => s.day))).join(", ");
+  /** Número de WhatsApp (solo dígitos). Llega por props: este componente no importa contenido validado. */
+  whatsapp: string;
+};
+
+const wa = (numero: string, texto: string) => `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+
+const botonWhatsapp =
+  "inline-flex min-h-12 items-center justify-center gap-2.5 rounded-pill bg-whatsapp px-6 py-3 font-bold text-marino-950 shadow-flota transition-transform duration-(--dur-base) ease-spring-soft hover:-translate-y-0.5 focus-visible:-translate-y-0.5 active:scale-[0.97]";
+
+/** Agrupa por día respetando el orden en que llegan de la API. */
+function porDia(items: ScheduleItem[]) {
+  const grupos = new Map<string, ScheduleItem[]>();
+  for (const item of items) grupos.set(item.day, [...(grupos.get(item.day) ?? []), item]);
+  return Array.from(grupos, ([dia, clases]) => ({ dia, clases }));
+}
+
+export default function SchedulesClient({ branches, unavailable = false, whatsapp }: Props) {
+  const [seleccion, setSeleccion] = useState(0);
+  // La grilla solo se anima al cambiar de sucursal, nunca en la primera carga.
+  const [cambio, setCambio] = useState(false);
+  const base = useId();
+  const elegir = (i: number) => {
+    setSeleccion(i);
+    setCambio(true);
+  };
+  const sucursal = branches[seleccion] ?? branches[0];
+  const dias = porDia(sucursal?.schedules ?? []);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const delta = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!delta) return;
+    e.preventDefault();
+    const siguiente = (seleccion + delta + branches.length) % branches.length;
+    elegir(siguiente);
+    document.getElementById(`${base}-tab-${siguiente}`)?.focus();
+  };
 
   return (
-    <section id="horarios" className="py-20 md:py-28 bg-slate-50 relative border-t border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100/70 text-blue-800 text-xs font-semibold uppercase tracking-wider mb-4">
-            <Calendar className="w-3.5 h-3.5 text-cyan-600" />
-            <span>Disponibilidad y Turnos</span>
-          </div>
+    <section id="horarios" data-tone="espuma" aria-labelledby="horarios-titulo" className="bg-tone-bg py-20 text-tone-fg md:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <header className="max-w-3xl" data-reveal>
+            <h2 id="horarios-titulo" className="font-display text-display-lg font-extrabold uppercase">
+              La pizarra de horarios
+            </h2>
+            <p className="mt-5 max-w-2xl text-lead text-tone-muted">
+              {unavailable
+                ? "Los turnos cambian cada semana. Escríbenos y te pasamos los que tienen cupo."
+                : "Turnos al día, directo del sistema de la academia. Elige la sucursal y escríbenos por el que te sirva."}
+            </p>
+          </header>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-900 tracking-tight">
-            Elige el grupo y el horario que se ajuste a tu rutina
-          </h2>
-
-          <p className="mt-4 text-base sm:text-lg text-slate-600 font-normal">
-            Clases para niños desde los 2 años y adultos organizadas para que aproveches al máximo cada sesión.
-          </p>
+          {branches.length > 1 && (
+            <div
+              role="tablist"
+              aria-label="Sucursal"
+              className="flex w-full max-w-md rounded-pill border border-tone-line bg-white p-1.5 shadow-flota lg:w-auto"
+            >
+              {branches.map((b, i) => (
+                <button
+                  key={b.id}
+                  id={`${base}-tab-${i}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === seleccion}
+                  aria-controls={`${base}-panel`}
+                  tabIndex={i === seleccion ? 0 : -1}
+                  onClick={() => elegir(i)}
+                  onKeyDown={onKeyDown}
+                  className={cn(
+                    "flex min-h-12 flex-1 items-center justify-center gap-2 rounded-pill px-5 font-bold transition-[background-color,color,transform] duration-(--dur-base) ease-spring-soft active:scale-[0.97] lg:flex-none",
+                    i === seleccion ? "bg-marino-900 text-espuma-50" : "text-tinta-600 hover:bg-espuma-100 hover:text-marino-950",
+                  )}
+                >
+                  <MapPin aria-hidden className="size-4" />
+                  {b.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Fallback when the schedules API is unavailable */}
         {unavailable && (
-          <div className="max-w-2xl mx-auto mb-12 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-md shadow-blue-900/5 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
-              <Clock className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-blue-950 mb-2">
-              Consulta nuestros horarios por WhatsApp
+          <div data-tone="blanco" className="mt-12 max-w-2xl rounded-blob bg-tone-bg p-8 shadow-flota sm:p-10">
+            <Clock aria-hidden className="size-8 text-piscina-700" />
+            <h3 className="mt-4 font-display text-display-sm font-extrabold uppercase">
+              Consulta los horarios por WhatsApp
             </h3>
-            <p className="text-slate-600 text-sm sm:text-base mb-6">
-              En este momento no pudimos cargar los horarios. Escríbenos y te compartimos los turnos y cupos
-              disponibles en Utesa y VivirMás.
+            <p className="mt-3 text-tone-muted">
+              No pudimos cargar los horarios en este momento. Escríbenos y te pasamos los turnos y cupos de Utesa
+              y VivirMás.
             </p>
             <a
-              href="https://wa.me/18298830129?text=Hola%20MC%20Swim%20Academy%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20horarios%20disponibles."
+              href={wa(whatsapp, "Hola MC Swim Academy, quiero información sobre los horarios disponibles.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm shadow-md shadow-green-500/30 transition-all active:scale-95"
+              className={cn(botonWhatsapp, "mt-6")}
             >
-              <MessageCircle className="w-4 h-4" />
-              <span>Consultar horarios por WhatsApp</span>
+              <MessageCircle aria-hidden className="size-5" />
+              Pedir horarios por WhatsApp
             </a>
           </div>
         )}
 
-        {/* Branch Selector Tabs */}
-        {branches.length > 0 && (
-          <div className="flex justify-center mb-12">
-            <div className="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center max-w-md w-full">
-              {branches.map((branch) => (
-                <button
-                  key={branch.id}
-                  onClick={() => setSelectedBranchId(branch.id)}
-                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
-                    selectedBranch?.id === branch.id
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                      : "text-slate-600 hover:text-blue-900 hover:bg-slate-50"
-                  }`}
-                >
-                  <MapPin className="w-4 h-4" />
-                  <span>Sucursal {branch.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {sucursal && (
+          <div
+            id={`${base}-panel`}
+            role={branches.length > 1 ? "tabpanel" : undefined}
+            aria-labelledby={branches.length > 1 ? `${base}-tab-${seleccion}` : undefined}
+            className="mt-12"
+          >
+            {(sucursal.address || sucursal.notes) && (
+              <p className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-tone-muted">
+                <MapPin aria-hidden className="size-5 text-piscina-700" />
+                <span className="font-bold text-tone-fg">Sucursal {sucursal.name}</span>
+                {sucursal.address && <span>{sucursal.address}</span>}
+                {sucursal.notes && <span className="w-full sm:w-auto">{sucursal.notes}</span>}
+              </p>
+            )}
 
-        {selectedBranch && (
-          <>
-            {/* Branch Info Pill */}
-            <div className="max-w-3xl mx-auto mb-8 bg-blue-50/70 border border-blue-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="font-bold text-blue-950 text-sm sm:text-base">
-                    Sucursal {selectedBranch.name}
-                    {selectedBranch.address ? ` (${selectedBranch.address})` : ""}
-                  </div>
-                  {selectedBranch.notes && (
-                    <div className="text-xs text-slate-600">{selectedBranch.notes}</div>
-                  )}
-                </div>
-              </div>
-
-              {daysSummary && (
-                <span className="text-xs font-semibold px-3 py-1 bg-white text-blue-700 rounded-full border border-blue-200">
-                  {daysSummary}
-                </span>
-              )}
-            </div>
-
-            {/* Schedule Cards Grid */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedBranch.id}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+            {dias.length === 0 ? (
+              <p className="rounded-card border border-dashed border-tone-line bg-white p-8 text-tone-muted">
+                Por ahora no hay horarios publicados en esta sucursal. Escríbenos para saber cuándo abren nuevos
+                turnos.
+              </p>
+            ) : (
+              <div
+                key={sucursal.id}
+                className={cn(
+                  "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-[repeat(auto-fit,minmax(15rem,1fr))]",
+                  cambio && "motion-safe:animate-[aparecer_500ms_var(--ease-out-expo)_both]",
+                )}
               >
-                {currentSchedules.length === 0 ? (
-                  <div className="col-span-full text-center py-12 text-slate-500 bg-white rounded-3xl border border-slate-200/80">
-                    Por el momento no hay horarios disponibles en esta sucursal. Escríbenos para
-                    conocer las próximas aperturas.
-                  </div>
-                ) : (
-                  currentSchedules.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-md shadow-blue-900/5 hover:shadow-lg hover:shadow-blue-900/10 hover:border-blue-300 transition-all duration-300 flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="flex items-center gap-1.5">
-                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
-                              {item.day}
-                            </span>
-                            {item.full && (
-                              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700 ring-1 ring-red-600/20">
+                {dias.map(({ dia, clases }) => (
+                  <div key={dia} className="overflow-hidden rounded-card bg-white shadow-flota">
+                    <h3 className="bg-marino-900 px-5 py-3 font-display text-2xl font-extrabold uppercase text-espuma-50">
+                      {dia}
+                    </h3>
+                    <ul className="divide-y divide-tone-line">
+                      {clases.map((clase, i) => (
+                        <li key={`${clase.time}-${i}`} className="px-5 py-4">
+                          <div className="flex items-baseline justify-between gap-3">
+                            <span className="font-display text-display-sm font-extrabold tabular-nums">{clase.time}</span>
+                            {clase.full ? (
+                              <span className="rounded-pill bg-corchera-600 px-2.5 py-0.5 text-sm font-bold text-white">
                                 Cupo lleno
                               </span>
+                            ) : (
+                              <span className="rounded-pill bg-espuma-100 px-2.5 py-0.5 text-sm font-semibold text-turquesa-700">
+                                {clase.category}
+                              </span>
                             )}
-                          </span>
-                          <span className="text-xs font-medium text-cyan-700 bg-cyan-50 px-2.5 py-0.5 rounded-md">
-                            {item.category}
-                          </span>
-                        </div>
-
-                        <div className="flex items-baseline gap-2 mb-2">
-                          <Clock className="w-5 h-5 text-blue-600 self-center" />
-                          <span className="text-3xl font-black text-blue-950 tracking-tight">
-                            {item.time}
-                          </span>
-                        </div>
-
-                        <div className="text-sm font-semibold text-blue-900 mb-2">
-                          {item.ageGroup}
-                        </div>
-
-                        {item.notes && (
-                          <p className="text-xs text-slate-500 leading-relaxed">{item.notes}</p>
-                        )}
-                      </div>
-
-                      <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        {item.full ? (
-                          <span className="text-xs text-slate-400 font-medium">Sin cupos por ahora</span>
-                        ) : (
-                          <span className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                            Cupos reducidos
-                          </span>
-                        )}
-
-                        <a
-                          href={`https://wa.me/18298830129?text=${encodeURIComponent(
-                            `Hola MC Swim Academy, me interesa el horario de ${item.day} a las ${item.time} en ${selectedBranch.name}.`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
-                        >
-                          <span>{item.full ? "Unirme a lista de espera" : "Consultar cupo"}</span>
-                          <span>→</span>
-                        </a>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </>
+                          </div>
+                          <p className="mt-1 font-semibold">{clase.ageGroup}</p>
+                          {clase.full && <p className="text-sm text-tone-muted">{clase.category}</p>}
+                          {clase.notes && <p className="mt-1 text-sm text-tone-muted">{clase.notes}</p>}
+                          <a
+                            href={wa(
+                              whatsapp,
+                              `Hola MC Swim Academy, me interesa el horario del ${clase.day} a las ${clase.time} en ${sucursal.name}.`,
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/cupo mt-2 inline-flex min-h-11 items-center gap-1.5 font-bold text-piscina-700"
+                          >
+                            <span className="relative">
+                              {clase.full ? "Unirme a la lista de espera" : "Consultar cupo"}
+                              <span
+                                aria-hidden
+                                className="absolute inset-x-0 -bottom-0.5 h-0.5 origin-left scale-x-0 bg-current transition-transform duration-(--dur-base) ease-out-expo group-hover/cupo:scale-x-100 group-focus-visible/cupo:scale-x-100"
+                              />
+                            </span>
+                            <span className="sr-only">
+                              {" "}
+                              ({clase.day}, {clase.time})
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Custom Schedule Inquiry Banner */}
-        <div className="rounded-3xl bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 sm:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-center md:text-left">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-cyan-300 flex-shrink-0 hidden sm:flex">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">
-                ¿No encuentras tu horario ideal?
-              </h3>
-              <p className="text-slate-300 text-sm">
-                Escríbenos directamente y te orientamos sobre aperturas de nuevos turnos y cupos especiales.
-              </p>
-            </div>
+        <div
+          data-tone="boya"
+          className="mt-14 flex flex-col gap-6 rounded-blob bg-tone-bg p-8 sm:p-10 md:flex-row md:items-center md:justify-between"
+        >
+          <div>
+            <h3 className="font-display text-display-sm font-extrabold uppercase">¿No encuentras tu horario?</h3>
+            <p className="mt-2 max-w-xl font-medium text-tone-muted">
+              Escríbenos y te contamos cuándo abren turnos nuevos o si hay cupos especiales.
+            </p>
           </div>
-
           <a
-            href="https://wa.me/18298830129?text=Hola%20MC%20Swim%20Academy%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20horarios%20disponibles."
+            href={wa(whatsapp, "Hola MC Swim Academy, quiero información sobre los horarios disponibles.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-blue-900 hover:bg-slate-100 font-bold text-sm shadow-md transition-all active:scale-95"
+            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2.5 rounded-pill bg-marino-900 px-6 py-3 font-bold text-espuma-50 shadow-flota transition-transform duration-(--dur-base) ease-spring-soft hover:-translate-y-0.5 focus-visible:-translate-y-0.5 active:scale-[0.97]"
           >
-            <MessageCircle className="w-4 h-4 text-green-600" />
-            <span>Consultar disponibilidad</span>
+            <MessageCircle aria-hidden className="size-5" />
+            Consultar disponibilidad
           </a>
         </div>
       </div>

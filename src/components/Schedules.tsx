@@ -1,3 +1,4 @@
+import { SITE } from "@/content/site";
 import SchedulesClient, { type BranchSchedule } from "./SchedulesClient";
 
 // Los horarios vienen de la API pública del sistema de gestión (mcswim-admin).
@@ -61,5 +62,11 @@ async function fetchSchedules(): Promise<BranchSchedule[] | null> {
 
 export default async function Schedules() {
   const branches = await fetchSchedules();
-  return <SchedulesClient branches={branches ?? []} unavailable={branches === null} />;
+  return (
+    <SchedulesClient
+      branches={branches ?? []}
+      unavailable={branches === null}
+      whatsapp={SITE.whatsapp.numero}
+    />
+  );
 }
