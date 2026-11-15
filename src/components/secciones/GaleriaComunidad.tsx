@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import type { Foto } from "@/content/fotos";
 import { cn } from "@/lib/cn";
+import { transicion } from "@/lib/transicion";
 
 // Tira de fotos de la comunidad.
 // - Se desliza con el dedo (scroll-snap) y, con ratón, con las flechas.
@@ -62,7 +63,8 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
   const cerrar = () => visor.current?.close();
 
   const pasar = useCallback(
-    (sentido: 1 | -1) => setAbierta((i) => (i === null ? i : (i + sentido + fotos.length) % fotos.length)),
+    (sentido: 1 | -1) =>
+      transicion(() => setAbierta((i) => (i === null ? i : (i + sentido + fotos.length) % fotos.length))),
     [fotos.length],
   );
 
@@ -159,7 +161,7 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
                 quality={75}
                 placeholder="blur"
                 sizes="100vw"
-                className="visor-foto object-contain"
+                className="visor-foto object-contain [view-transition-name:visor-foto]"
               />
             </div>
             <figcaption className="text-center text-sm text-white/80">

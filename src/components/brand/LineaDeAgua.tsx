@@ -1,5 +1,12 @@
 import { cn } from "@/lib/cn";
 
+// Ola periódica (periodo 720 en unidades del viewBox) que se extiende un
+// periodo a cada lado: así se puede desplazar con el scroll sin que asomen los
+// bordes. Dos capas: la de atrás, más clara y desfasada medio periodo, se mueve
+// más despacio (ver .linea-agua en globals.css; quieta sin soporte).
+const OLA = "c120 -22 240 -22 360 0 s240 22 360 0";
+const trazo = (y: number) => `M-720 ${y}${` ${OLA}`.repeat(5)}V64H-720Z`;
+
 /**
  * Borde ondulado entre secciones. Se pinta con `currentColor`: dale el color
  * de la sección siguiente (`text-espuma-50`, `text-piscina-500`…).
@@ -10,12 +17,12 @@ export function LineaDeAgua({ className, invertida = false }: { className?: stri
       aria-hidden
       viewBox="0 0 1440 64"
       preserveAspectRatio="none"
-      className={cn("block h-8 w-full sm:h-12 lg:h-16", invertida && "rotate-180", className)}
+      className={cn("linea-agua block h-8 w-full overflow-hidden sm:h-12 lg:h-16", invertida && "rotate-180", className)}
     >
-      <path
-        fill="currentColor"
-        d="M0 38C120 18 240 8 360 14s240 34 360 38 240-22 360-34 240-2 360 12v34H0Z"
-      />
+      <g transform="translate(-360 0)">
+        <path className="ola-fondo" fill="currentColor" fillOpacity={0.45} d={trazo(26)} />
+      </g>
+      <path className="ola-frente" fill="currentColor" d={trazo(34)} />
     </svg>
   );
 }

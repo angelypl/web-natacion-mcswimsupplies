@@ -655,3 +655,182 @@ html[data-sucursal="estadio-olimpico"] [data-sede="estadio-olimpico"] .sede-tarj
   border-color: var(--color-turquesa-400);
   box-shadow: inset 0 0 0 1px var(--color-turquesa-400);
 }
+
+/* ───────────────────────── Movimiento con intención (ronda 3) ─────────────────────────
+   Cada efecto explica algo: qué cambió, dónde estoy o qué puedo tocar. Todo
+   tiene variante quieta con prefers-reduced-motion y, sin soporte, el elemento
+   queda quieto y visible. Inventario en ANIMACIONES.md. */
+
+/* View Transitions (sucursal y filtro en Horarios, programa en el formulario,
+   foto del visor): lo que sigue en pantalla se desplaza a su sitio. Con
+   soporte, la entrada escalonada de las filas sobra. */
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+
+@supports (view-transition-name: none) {
+  .fila-dia {
+    animation: none !important;
+  }
+}
+
+/* Destello: la parte que cambió por una elección hecha en otra sección. */
+@keyframes destello-borde {
+  from {
+    box-shadow: 0 0 0 4px rgb(244 210 60 / 0.9);
+  }
+  to {
+    box-shadow: 0 0 0 4px rgb(244 210 60 / 0);
+  }
+}
+
+[data-destellando] {
+  animation: destello-borde 1200ms var(--ease-out-expo) both;
+}
+
+/* Onda desde el punto de toque en la acción principal. */
+.onda {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.onda::after {
+  content: "";
+  position: absolute;
+  left: var(--onda-x, 50%);
+  top: var(--onda-y, 50%);
+  z-index: -1;
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem 0 0 -0.5rem;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.6);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes onda {
+  from {
+    opacity: 0.7;
+    transform: scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(26);
+  }
+}
+
+.onda[data-onda]::after {
+  animation: onda 600ms var(--ease-out-expo);
+}
+
+/* Cifras: cada dígito es una rueda 0–9 colocada en su número (estado final por
+   defecto). Al entrar en vista, rueda desde 0 una sola vez. */
+.digito {
+  display: inline-block;
+  height: 1em;
+  overflow: clip;
+  line-height: 1;
+}
+
+.digito-rueda {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--d) * -1em));
+}
+
+.digito-rueda > span {
+  display: block;
+  height: 1em;
+}
+
+.cifra-rueda {
+  line-height: 1;
+}
+
+@keyframes rodar {
+  from {
+    transform: translateY(0);
+  }
+}
+
+[data-reveal-state="armed"] .digito-rueda {
+  transform: translateY(0);
+}
+
+[data-reveal-state="play"] .digito-rueda {
+  animation: rodar 1100ms var(--ease-out-expo) both;
+  animation-delay: calc(200ms + var(--i, 0) * 70ms);
+}
+
+/* Preguntas: la altura se abre con ::details-content e interpolate-size donde
+   hay soporte (Chrome 131+). Medido: no mueve lo que está encima (crece hacia
+   abajo); sin soporte, queda el fundido de la respuesta. */
+@supports (interpolate-size: allow-keywords) {
+  details {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 380ms var(--ease-out-expo),
+      content-visibility 380ms allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* Agua entre secciones: las dos capas de LineaDeAgua se desplazan con el
+   scroll a distinta velocidad. */
+@supports (animation-timeline: view()) {
+  .linea-agua {
+    view-timeline: --ola block;
+  }
+
+  @keyframes ola-frente {
+    to {
+      transform: translateX(-360px);
+    }
+  }
+
+  @keyframes ola-fondo {
+    to {
+      transform: translateX(180px);
+    }
+  }
+
+  .ola-frente {
+    animation: ola-frente linear both;
+    animation-timeline: --ola;
+  }
+
+  .ola-fondo {
+    animation: ola-fondo linear both;
+    animation-timeline: --ola;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ola-frente,
+  .ola-fondo,
+  [data-destellando],
+  .onda[data-onda]::after,
+  [data-reveal-state="play"] .digito-rueda {
+    animation: none !important;
+  }
+
+  details::details-content {
+    transition: none !important;
+  }
+}

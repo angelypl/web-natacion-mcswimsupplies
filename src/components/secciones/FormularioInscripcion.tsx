@@ -363,7 +363,7 @@ export default function FormularioInscripcion({ programas, sucursales, programaI
       </div>
 
       {/* Lo que se va a enviar, antes del botón. */}
-      <div className="resumen rounded-card bg-espuma-100 p-4 sm:col-span-2 sm:p-5">
+      <div data-destello="programa sucursal turno" className="resumen rounded-card bg-espuma-100 p-4 sm:col-span-2 sm:p-5">
         <p className="text-sm font-bold uppercase tracking-wide text-tinta-600">Vas a enviar</p>
         <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-[0.95rem] sm:grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)]">
           <dt className="text-tinta-600">Programa</dt>

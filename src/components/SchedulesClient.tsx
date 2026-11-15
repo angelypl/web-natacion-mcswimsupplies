@@ -314,7 +314,11 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
               </p>
             ) : (
               // Marcador de piscina: una fila por día y las horas en columnas alineadas.
-              <div data-tone="abismo" className="pizarra overflow-hidden rounded-blob bg-tone-bg text-tone-fg shadow-hondo">
+              <div
+                data-tone="abismo"
+                data-destello="programa sucursal"
+                className="pizarra overflow-hidden rounded-blob bg-tone-bg text-tone-fg shadow-hondo"
+              >
                 {proxima && (
                   <p className="flex flex-wrap items-center gap-x-2 border-b border-tone-line px-5 py-3 text-sm text-tone-muted sm:px-7">
                     <Clock aria-hidden className="size-4 text-turquesa-400" />
@@ -332,7 +336,7 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                         key={dia}
                         style={{ animationDelay: `${n * 50}ms` } as CSSProperties}
                         className={cn(
-                          "grid grid-cols-1 lg:grid-cols-[10rem_minmax(0,1fr)]",
+                          "fila-dia grid grid-cols-1 lg:grid-cols-[10rem_minmax(0,1fr)]",
                           esHoy && "bg-marino-900",
                           cambio && "motion-safe:animate-[aparecer_450ms_var(--ease-out-expo)_both]",
                         )}
@@ -360,6 +364,8 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                             return (
                               <li
                                 key={`${clase.time}-${i}`}
+                                // View Transition: el turno que sigue en pantalla se desplaza a su sitio.
+                                style={{ viewTransitionName: `turno-${clase.indice}-${minutos(clase.time)}-${i}` } as CSSProperties}
                                 className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 px-5 py-3.5 sm:px-7 lg:grid-cols-[9rem_minmax(0,1fr)_auto] lg:items-center lg:gap-x-6 lg:py-4"
                               >
                                 <Hora

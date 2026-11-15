@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Cifra } from "@/components/ui/Cifra";
 import { Etiqueta } from "@/components/ui/Etiqueta";
 import { InstagramIcono } from "@/components/ui/InstagramIcono";
 import { Section } from "@/components/ui/Section";
@@ -60,7 +61,7 @@ export function Comunidad() {
                 className="border-t-4 border-piscina-500 pt-3"
               >
                 <span className="cifra block font-display text-display-lg font-extrabold leading-none tabular-nums text-marino-900">
-                  {h.cifra}
+                  <Cifra texto={h.cifra} />
                 </span>
                 <span className="mt-1 block font-semibold text-tone-muted">{h.texto}</span>
               </li>

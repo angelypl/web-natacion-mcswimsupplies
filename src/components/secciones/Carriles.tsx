@@ -5,6 +5,7 @@ import { ACCION_PRINCIPAL } from "@/components/layout/navegacion";
 import { Corchera, CorcheraVertical } from "@/components/brand/Corchera";
 import { LineaDeAgua } from "@/components/brand/LineaDeAgua";
 import { BotonLink } from "@/components/ui/Boton";
+import { Cifra } from "@/components/ui/Cifra";
 import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
@@ -37,7 +38,7 @@ export function Carriles() {
             <p className="flex items-baseline justify-between gap-4">
               <span className="font-display text-xl font-extrabold uppercase">Inscripción única</span>
               <span className="cifra font-display text-display-sm font-extrabold tabular-nums">
-                {formatoPesos(INSCRIPCION.monto)}
+                <Cifra texto={formatoPesos(INSCRIPCION.monto)} />
               </span>
             </p>
             <p className="mt-1 text-sm text-tone-muted">
@@ -95,7 +96,7 @@ export function Carriles() {
                       </div>
                       <p className="shrink-0 text-right">
                         <span className="cifra block font-display text-display-sm font-extrabold tabular-nums">
-                          {formatoPesos(carril.mensualidad)}
+                          <Cifra texto={formatoPesos(carril.mensualidad)} />
                         </span>
                         <span className="block text-sm font-bold">al mes</span>
                       </p>
@@ -115,10 +116,10 @@ export function Carriles() {
                     </p>
 
                     <div className="mt-auto pt-5">
-                      <p className="mb-3 flex items-baseline justify-between gap-3 border-t border-tone-line pt-3 text-sm font-bold">
+                      <p data-reveal className="mb-3 flex items-baseline justify-between gap-3 border-t border-tone-line pt-3 text-sm font-bold">
                         Primer mes
                         <span className="cifra font-display text-xl font-extrabold tabular-nums">
-                          {formatoPesos(primerMes(carril))}
+                          <Cifra texto={formatoPesos(primerMes(carril))} />
                         </span>
                       </p>
                       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 lg:grid-cols-1">
