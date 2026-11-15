@@ -73,6 +73,7 @@ La referencia viva está en `/styleguide` (noindex). Los tokens están en `@them
 - `.foto-sticker`: personas (hero, Por qué, carriles). Marco blanco de 5–6 px y giro leve.
 - `.foto-agua`: planos de piscina sobre fondo oscuro (pasos). A sangre, borde inferior en ola (máscara con la curva de `LineaDeAgua`).
 - `.foto-plana`: fotos de grupo o documento (comunidad). Entera, con su proporción, sin giro ni recorte.
+- **Solo fotos que también usa la web en producción** (mcswimacademy.com), por pedido del cliente. El hero lleva la misma foto que producción (`MCB08946.jpg`).
 - Ninguna foto se repite en secciones contiguas (reparto en `src/content/fotos.ts`).
 
 ### Reglas

@@ -78,14 +78,14 @@ export function Hero() {
             <div className="foto-sticker relative rotate-[2deg] rounded-blob border-[6px] border-espuma-50 bg-marino-900 shadow-hondo motion-safe:animate-[subir_1100ms_var(--ease-spring-soft)_120ms_both]">
               <div className="relative aspect-[4/3] overflow-hidden rounded-[calc(var(--radius-blob)-6px)] lg:aspect-[5/6]">
                 <Image
-                  src={FOTOS.instructoraNino.src}
-                  alt={FOTOS.instructoraNino.alt}
+                  src={FOTOS.clavado.src}
+                  alt={FOTOS.clavado.alt}
                   fill
                   preload
                   quality={60}
                   placeholder="blur"
                   sizes="(min-width: 1280px) 480px, (min-width: 1024px) 38vw, (min-width: 448px) 448px, 92vw"
-                  className="object-cover object-[38%_45%]"
+                  className="object-cover object-[50%_60%]"
                 />
               </div>
             </div>
@@ -94,7 +94,7 @@ export function Hero() {
             estilo="marino"
             className="absolute -bottom-4 left-4 -rotate-3 px-4 py-2 text-base shadow-flota ring-1 ring-espuma-50/20 sm:-left-6"
           >
-            Clases desde los 2 años
+            Piscina semiolímpica en Utesa
           </Etiqueta>
         </div>
       </div>

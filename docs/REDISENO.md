@@ -70,7 +70,7 @@ Un commit local por fase sobre el punto de partida `0bd216b`. Medidas antes/desp
 - **Sucursales y pizarra**: no se fundieron las fichas dentro de las pestañas de Horarios. En producción la API solo tiene hoy Utesa y VivirMás: si la ficha viviera en la pestaña, Prado Oriental y Estadio Olímpico desaparecerían de la página hasta que se carguen en mcswim-admin, y también con la API caída.
 
 ### Fase 2: menos scroll, misma información
-- **Hero**: titular más bajo en portátil y en móvil, botones en una fila y "¿Quién va a nadar?" en tres columnas. En 1366×768 entran titular, acción principal y selector; en 390×844 asoma la foto. Foto nueva: `MCB07464.jpg` (instructora con un niño en el agua): plano cercano en vez del plano general con figuras pequeñas. El LCP sigue siendo el titular (no parte de opacidad 0) y la foto conserva `preload` y `sizes`.
+- **Hero**: titular más bajo en portátil y en móvil, botones en una fila y "¿Quién va a nadar?" en tres columnas. En 1366×768 entran titular, acción principal y selector; en 390×844 asoma la foto. Foto: la misma que producción (`MCB08946.jpg`, clavado en la piscina semiolímpica). Se probó `MCB07464.jpg`, pero el cliente pidió (2026-11-15) usar solo las fotos de producción. El LCP sigue siendo el titular (no parte de opacidad 0) y la foto conserva `preload` y `sizes`.
 - **Carriles**: en escritorio, tres carriles lado a lado separados por corcheras verticales (`CorcheraVertical`), para comparar edad, precio y sucursales. Se quitó la descripción (repetía la lista "incluye"), cada carril dice su **primer mes** (mensualidad + inscripción, calculado) y tiene "Reservar mi cupo" y "Ver horarios de…". La inscripción pasa junto al titular y las formas de pago a una fila. "Tu elección" marca el carril elegido.
 - **Así empiezas**: los cuatro pasos en una fila, cada uno con su foto (antes: foto fija y cuatro bloques a `62vh`, con los no activos al 40 % de opacidad, unas 3 pantallas). En móvil sigue el carrusel. Se eliminó `FotosPasos`.
 - **Horarios**: marcador de piscina: una fila por día y una línea por turno con la hora en `font-display` + `tabular-nums`, columnas alineadas, "Hoy" bajo el día y "Cupo lleno" tachando la hora. Días normalizados ("Sábados" → "Sábado"), turnos ordenados por día y hora, grupo de edad y nota sin repetirse, y "Hoy no hay clases en X. La próxima: …" cuando toca.
@@ -80,7 +80,7 @@ Un commit local por fase sobre el punto de partida `0bd216b`. Medidas antes/desp
 - **Pie**: una pantalla como mucho; navegación en una fila, contacto en una columna, rótulo más pequeño en móvil y sin repetir las sucursales.
 
 ### Fase 3: pulido visual
-- **Fotos**: se incorporan las tres que no se usaban, cada una con un `alt` de lo que se ve: `MCB07464.jpg` (hero), `GM106022.jpg` (paso 1, los cuatro instructores) y `02488C2A-….jpeg` (paso 3, tres alumnos en el borde). Ninguna foto se repite en secciones contiguas. "Por qué" mantiene `GM106103.jpg` (dos instructores en el borde), que es la que usa producción para el equipo: así lo pidió el cliente el 2026-11-14, por eso la de los cuatro instructores no va ahí.
+- **Fotos**: **solo las de producción** (regla del cliente, 2026-11-14 y 2026-11-15). `MCB07464`, `GM106022` y `02488C2A` siguen en `public/` pero no se usan. Ninguna foto se repite en secciones contiguas; "Por qué" usa `GM106103`, como producción.
 - **Tres tratamientos con criterio de uso** (`globals.css`, `/styleguide`): sticker para personas, agua (a sangre con borde en ola) para los planos de piscina de los pasos, y plana para la foto de grupo, que nunca se recorta.
 - **Boya** reservado para "Reservar mi cupo" y el aviso "Hoy". Salen de boya: la etiqueta "Nueva" (turquesa), el paso activo (ya no existe), el bloque "¿No encuentras tu horario?" (ahora una línea con el botón de WhatsApp), el subrayado de la sección activa y el final de la barra de progreso.
 - **Ritmo**: secuencia de tonos abismo → espuma → piscina → marino → espuma (pizarra abismo) → abismo → blanco → marino → espuma → abismo. El tramo azul de Carriles bajó de 3 a 1,6 pantallas en 1366; los rellenos verticales pasaron de `py-20/28` a `py-14/20` o `py-16/24`.
@@ -93,7 +93,6 @@ Inventario en `ANIMACIONES.md` (sección "Ronda 3"). Descartado: la máscara de 
 - `qa:medir` y `qa:flujos` corren también en WebKit y Firefox; `qa:medir` imprime el alto por sección contra la línea de base (`scripts/qa/alturas.mjs`). Cifras en `QA.md`.
 
 ### Decisiones que necesitan visto bueno
-- **Fotos fuera de producción**: el 2026-11-14 se dejaron solo las de producción; esta ronda vuelve a usar `MCB07464`, `GM106022` y `02488C2A` (lo pide el encargo). "Por qué" sigue con la de producción.
 - **JS +3 KB** por el recorrido compartido.
 - **Acción principal = formulario** (y no WhatsApp directo).
 - **"Punto principal" eliminado** de Sucursales.
