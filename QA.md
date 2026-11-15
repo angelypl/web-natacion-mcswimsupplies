@@ -45,7 +45,21 @@ Corridas alternadas, 6 de cada una:
 
 Las mediciones consecutivas en esta máquina dieron mucho ruido (2–7 s en ambas versiones). Las alternadas fueron estables y son las que valen.
 
+## Segunda ronda (2026-11-09)
+
+Medido contra `next dev` (no contra el build de producción; el build compila sin errores, pero el rendimiento no se volvió a medir).
+
+- `qa:medir`: 0 scroll horizontal, 0 desbordes, 0 titulares cortados y 0 táctiles < 44 px en los nueve anchos; axe con 0 violaciones en 375 y 1280.
+- `qa:flujos`: 20/20 en verde. Se agregaron ocho comprobaciones: barra móvil (oculta en el hero, visible después, retirada en el formulario), selector del hero, filtro de horarios, sucursal según programa y formato del teléfono.
+- Alto de la página en móvil (390 px): de 19.253 px a 17.901 px, aun con la galería nueva.
+- `scripts/qa/capturas.mjs` y `scripts/qa/detalle.mjs` sacan capturas por pantalla y de estados interactivos.
+
+### Sucursales nuevas (2026-11-09)
+- `qa:flujos` 20/20 y `qa:medir` sin problemas en los nueve anchos (axe: 0) con cuatro sucursales.
+- `scripts/qa/sedes.mjs` saca capturas de cada pestaña de horarios, las tarjetas de sucursales, un carril y el formulario.
+
 ## No verificado
+- Rendimiento (LCP, peso) después de la segunda ronda: las cifras de la tabla de arriba son de la primera.
 - Lighthouse oficial (no está instalado); se midió con Playwright + `PerformanceObserver`.
 - Safari/iOS real y Firefox: los efectos scroll-driven no corren allí y deberían quedarse quietos (diseñado así, sin probar en esos navegadores).
 - Lector de pantalla real (NVDA/VoiceOver): solo axe y pruebas de teclado.

@@ -10,9 +10,12 @@ import FormularioInscripcion from "./FormularioInscripcion";
 export function Inscripcion() {
   const programas = CARRILES.map((c) => ({
     id: c.id,
-    etiqueta: `${c.nombre}: ${c.edad.toLowerCase()} (${formatoPesos(c.mensualidad)}/mes)`,
+    nombre: c.nombre,
+    edad: c.edadCorta,
+    precio: formatoPesos(c.mensualidad),
+    sucursalIds: c.sucursalIds,
   }));
-  const sucursales = SITE.sucursales.map((s) => ({ id: s.id, etiqueta: `${s.nombre} (${s.zona})` }));
+  const sucursales = SITE.sucursales.map((s) => ({ id: s.id, nombre: s.nombre, zona: s.zona }));
 
   const contacto = [
     { href: whatsappUrl(), externo: true, icono: MessageCircle, etiqueta: "WhatsApp", valor: SITE.telefono.visible },
@@ -27,7 +30,7 @@ export function Inscripcion() {
           <Titular
             id="inscripcion-titulo"
             titulo="Reserva tu cupo"
-            entradilla={`Llena los datos y se abre WhatsApp con tu mensaje listo para enviar. Te respondemos de ${SITE.atencion.toLowerCase()}.`}
+            entradilla={`Marca tus opciones y se abre WhatsApp con el mensaje listo para enviar. Toma menos de un minuto y te respondemos de ${SITE.atencion.toLowerCase()}.`}
           />
 
           <ul className="mt-10 divide-y divide-tone-line border-y border-tone-line">
@@ -51,10 +54,11 @@ export function Inscripcion() {
           </ul>
         </div>
 
-        <div data-tone="blanco" className="rounded-blob bg-tone-bg p-6 text-tone-fg shadow-hondo sm:p-10 lg:col-span-7">
+        <div data-tone="blanco" data-reveal className="rounded-blob bg-tone-bg p-6 text-tone-fg shadow-hondo sm:p-10 lg:col-span-7">
           <FormularioInscripcion
             programas={programas}
             sucursales={sucursales}
+            programaInicial={CARRILES[1].id}
             whatsapp={SITE.whatsapp.numero}
           />
         </div>

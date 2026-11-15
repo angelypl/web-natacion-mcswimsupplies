@@ -113,6 +113,46 @@ const ok = (condicion, mensaje) => {
   await ctx.close();
 }
 
+// 6. Mejoras de uso: selector del hero, filtro de horarios, sucursal según programa y barra móvil.
+{
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const p = await ctx.newPage();
+  await p.goto(URL_BASE, { waitUntil: "networkidle" });
+
+  ok(!(await p.locator(".barra-movil").isVisible()), "barra móvil oculta sobre el hero");
+  await p.locator("a[href='#carril-3']").first().click();
+  await p.waitForTimeout(1500);
+  const arriba = await p.locator("#carril-3").evaluate((el) => Math.round(el.getBoundingClientRect().top));
+  ok(arriba >= 0 && arriba < 200, `"¿Quién va a nadar?" lleva al carril 3 (top=${arriba})`);
+  ok(await p.locator(".barra-movil").isVisible(), "barra móvil visible al pasar el hero");
+
+  const filtros = p.getByRole("group", { name: "Filtrar por programa" }).getByRole("button");
+  if ((await filtros.count()) > 1) {
+    await p.locator("#horarios").evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
+    const antes = await p.locator("#horarios a[href*='wa.me']").count();
+    await filtros.nth(1).click();
+    await p.waitForTimeout(700);
+    const despues = await p.locator("#horarios a[href*='wa.me']").count();
+    ok((await filtros.nth(1).getAttribute("aria-pressed")) === "true" && despues < antes, `filtro de programa reduce los turnos (${antes} → ${despues})`);
+  } else {
+    ok(true, "horarios sin filtro (un solo programa o API caída): se omite");
+  }
+
+  await p.locator("#inscripcion form").evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
+  await p.waitForTimeout(1200);
+  ok(!(await p.locator(".barra-movil").isVisible()), "barra móvil se retira en el formulario");
+  await p.getByRole("radio", { name: /Adultos/ }).check();
+  const utesa = p.getByRole("radio", { name: /Utesa/ });
+  const vivirmas = p.getByRole("radio", { name: /VivirMás/ });
+  ok((await utesa.isChecked()) && (await vivirmas.isDisabled()), "Adultos: marca Utesa y deshabilita VivirMás");
+  await p.getByRole("radio", { name: /Iniciación/ }).check();
+  ok((await vivirmas.isChecked()) && (await utesa.isDisabled()), "Iniciación: pasa sola a VivirMás");
+  await p.fill("#telefono", "8295551234");
+  await p.locator("#nombre").focus();
+  ok((await p.inputValue("#telefono")) === "(829) 555-1234", `teléfono se formatea al salir: ${await p.inputValue("#telefono")}`);
+  await ctx.close();
+}
+
 await b.close();
 console.log(fallas ? `\n${fallas} falla(s)` : "\nTodo en verde");
 process.exit(fallas ? 1 : 0);

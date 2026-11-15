@@ -39,7 +39,8 @@ for (const ancho of ANCHOS) {
     const recortado = (el) => {
       for (let p = el.parentElement; p; p = p.parentElement) {
         const o = getComputedStyle(p);
-        if (/(hidden|clip)/.test(o.overflowX) || /(hidden|clip)/.test(o.overflow)) return true;
+        // Los carruseles (overflow-x: auto) recortan a propósito lo que queda fuera.
+        if (/(hidden|clip|auto|scroll)/.test(o.overflowX) || /(hidden|clip)/.test(o.overflow)) return true;
       }
       return false;
     };
@@ -59,7 +60,15 @@ for (const ancho of ANCHOS) {
     // Titular cortado: su texto visible (sin capas aria-hidden ni sr-only)
     // se sale de la columna que lo contiene.
     const titularesCortados = [];
+    const enCarrusel = (el) => {
+      for (let p = el.parentElement; p; p = p.parentElement) {
+        if (/(auto|scroll)/.test(getComputedStyle(p).overflowX)) return true;
+      }
+      return false;
+    };
     for (const h of document.querySelectorAll("h1, h2, h3")) {
+      // Las tarjetas de un carrusel quedan fuera de pantalla hasta deslizar.
+      if (enCarrusel(h)) continue;
       const columna = h.parentElement.getBoundingClientRect();
       const recorrido = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
       let derecha = -Infinity;

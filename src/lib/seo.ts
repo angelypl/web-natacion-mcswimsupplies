@@ -16,12 +16,14 @@ export const metadataBase: Metadata = {
     "mc swim academy",
     "piscina semiolimpica utesa",
     "vivirmas natacion",
+    "natacion prado oriental",
+    "natacion estadio olimpico",
   ],
   authors: [{ name: SITE.nombre }],
   openGraph: {
     title: "MC Swim Academy | Academia de natación en Santo Domingo",
     description:
-      "Aprende a nadar con instructores certificados en Santo Domingo. Clases para todas las edades en dos sucursales.",
+      "Aprende a nadar con instructores certificados en Santo Domingo. Clases para todas las edades en cuatro sucursales.",
     locale: "es_DO",
     type: "website",
     siteName: SITE.nombre,

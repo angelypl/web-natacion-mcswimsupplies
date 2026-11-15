@@ -1,4 +1,5 @@
 import Schedules from "@/components/Schedules";
+import { BarraMovil } from "@/components/layout/BarraMovil";
 import { Cabecera } from "@/components/layout/Cabecera";
 import { Pie } from "@/components/layout/Pie";
 import { WhatsAppFlotante } from "@/components/layout/WhatsAppFlotante";
@@ -11,7 +12,13 @@ import { Preguntas } from "@/components/secciones/Preguntas";
 import { PrimeraClase } from "@/components/secciones/PrimeraClase";
 import { Sucursales } from "@/components/secciones/Sucursales";
 import RevealRoot from "@/components/ui/RevealRoot";
+import ScrollEspia from "@/components/ui/ScrollEspia";
+import { NAV } from "@/components/layout/navegacion";
 import { jsonLdInicio, serializar } from "@/lib/jsonLd";
+
+// Fuera del componente: referencias estables para el efecto de ScrollEspia.
+const SECCIONES = NAV.map((n) => n.href.slice(1));
+const SIN_BARRA = ["inscripcion"];
 
 export default function Home() {
   return (
@@ -36,7 +43,9 @@ export default function Home() {
       </main>
       <Pie />
       <WhatsAppFlotante />
+      <BarraMovil />
       <RevealRoot />
+      <ScrollEspia secciones={SECCIONES} sinBarra={SIN_BARRA} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializar(jsonLdInicio()) }} />
     </>
   );

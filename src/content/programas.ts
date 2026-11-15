@@ -8,8 +8,11 @@ const carril = z.object({
   mensualidad: z.number().int().positive(),
   descripcion: z.string(),
   incluye: z.array(z.string()).min(2).max(5),
-  sucursales: z.string(),
-  foto: z.enum(["instructoras", "sonrisaFideo", "adultos"]),
+  /** Texto corto para el selector del hero ("¿Quién va a nadar?"). */
+  edadCorta: z.string(),
+  /** Sucursales donde se da el programa: el formulario solo ofrece esas. */
+  sucursalIds: z.array(z.enum(["utesa", "vivirmas", "prado-oriental", "estadio-olimpico"])).min(1),
+  foto: z.enum(["coachNino", "sonrisaFideo", "adultos"]),
   mensajeWhatsapp: z.string(),
 });
 
@@ -27,8 +30,9 @@ export const CARRILES = z.array(carril).length(3).parse([
       "Estimulación acuática temprana",
       "Piscina con área poco profunda",
     ],
-    sucursales: "VivirMás",
-    foto: "instructoras",
+    edadCorta: "2 a 3 años",
+    sucursalIds: ["vivirmas"],
+    foto: "coachNino",
     mensajeWhatsapp:
       "Hola MC Swim Academy, me interesa inscribir a mi hijo/a en Iniciación (2 a 3 años, RD$3,000/mes).",
   },
@@ -45,7 +49,8 @@ export const CARRILES = z.array(carril).length(3).parse([
       "Flotación y técnicas de autoprotección",
       "Motivación y seguimiento del instructor",
     ],
-    sucursales: "Utesa y VivirMás",
+    edadCorta: "4 años o más",
+    sucursalIds: ["utesa", "vivirmas", "prado-oriental"],
     foto: "sonrisaFideo",
     mensajeWhatsapp:
       "Hola MC Swim Academy, me interesa inscribir a mi hijo/a en Formación (4+ años, RD$2,500/mes).",
@@ -61,9 +66,10 @@ export const CARRILES = z.array(carril).length(3).parse([
     incluye: [
       "De principiante absoluto a estilo libre",
       "Entrenamiento cardiovascular de bajo impacto",
-      "Horarios de mañana y de tarde",
+      "Horarios de mañana, tarde y noche",
     ],
-    sucursales: "Utesa",
+    edadCorta: "Jóvenes y adultos",
+    sucursalIds: ["utesa", "prado-oriental", "estadio-olimpico"],
     foto: "adultos",
     mensajeWhatsapp:
       "Hola MC Swim Academy, quiero inscribirme en las clases para Adultos (RD$2,500/mes).",
@@ -81,7 +87,8 @@ export const INSCRIPCION = z
     incluye: [
       "Evaluación inicial en el agua",
       "Asignación de grupo, carril y horario",
-      "Acceso a ambas sucursales",
+      // TODO_CLIENTE: confirmar que la inscripción sirve en las cuatro sucursales.
+      "Acceso a todas las sucursales",
     ],
     metodosPago: [
       {

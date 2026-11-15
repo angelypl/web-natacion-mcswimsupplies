@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, MoveRight } from "lucide-react";
 import { PatronCarriles } from "@/components/brand/LineaDeAgua";
 import { BotonLink } from "@/components/ui/Boton";
 import { Section } from "@/components/ui/Section";
@@ -10,7 +10,8 @@ import { whatsappUrl } from "@/lib/contacto";
 import FotosPasos from "./FotosPasos";
 
 // Historia con scroll: en escritorio la foto queda fija a la izquierda y
-// cambia con el paso que estás leyendo; en móvil cada paso lleva su foto.
+// cambia con el paso que estás leyendo. En móvil los pasos son tarjetas que se
+// deslizan de lado (scroll-snap nativo), con una barra de progreso.
 export function PrimeraClase() {
   const fotos = PASOS.map((p) => FOTOS[p.foto]);
 
@@ -24,45 +25,43 @@ export function PrimeraClase() {
           </div>
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="pasos min-w-0 lg:col-span-7">
           <Titular
             id="primera-titulo"
             titulo="Así empiezas"
             entradilla="Cuatro pasos entre tu primer mensaje y tu primera brazada. Sin papeleo ni vueltas."
           />
 
-          <ol className="mt-12">
+          <ol className="pasos-lista sin-barra -mx-4 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:mt-12 lg:block lg:overflow-visible lg:p-0">
             {PASOS.map((paso, i) => (
               <li
                 key={paso.titulo}
                 data-paso={i}
-                className="border-t border-tone-line py-10 lg:flex lg:min-h-[62vh] lg:flex-col lg:justify-center lg:py-16"
+                className="paso-foco flex w-[84%] max-w-sm shrink-0 snap-start flex-col rounded-card border border-tone-line bg-marino-800/70 p-5 lg:w-auto lg:max-w-none lg:min-h-[62vh] lg:justify-center lg:rounded-none lg:border-x-0 lg:border-b-0 lg:bg-transparent lg:px-0 lg:py-16"
               >
+                <div className="relative mb-5 aspect-[4/3] overflow-hidden rounded-[calc(var(--radius-card)-0.5rem)] lg:hidden">
+                  <Image
+                    src={fotos[i].src}
+                    alt={fotos[i].alt}
+                    fill
+                    quality={60}
+                    placeholder="blur"
+                    sizes="(min-width: 640px) 384px, 84vw"
+                    className="object-cover"
+                  />
+                </div>
+
                 <p
                   aria-hidden
-                  className="font-display text-display-lg font-extrabold tabular-nums text-turquesa-400"
+                  className="font-display text-display-md font-extrabold tabular-nums text-turquesa-400 lg:text-display-lg"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="mt-2 font-display text-display-md font-extrabold uppercase">
+                <h3 className="mt-1 font-display text-display-sm font-extrabold uppercase lg:mt-2 lg:text-display-md">
                   <span className="sr-only">Paso {i + 1}: </span>
                   {paso.titulo}
                 </h3>
-                <p className="mt-4 max-w-xl text-lead text-tone-muted">{paso.texto}</p>
-
-                <div className="mt-7 rounded-card border-[5px] border-espuma-50 bg-espuma-50 shadow-hondo lg:hidden">
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
-                    <Image
-                      src={fotos[i].src}
-                      alt={fotos[i].alt}
-                      fill
-                      quality={60}
-                      placeholder="blur"
-                      sizes="92vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
+                <p className="mt-3 max-w-xl text-tone-muted lg:mt-4 lg:text-lead">{paso.texto}</p>
 
                 {i === 0 && (
                   <BotonLink
@@ -70,7 +69,7 @@ export function PrimeraClase() {
                     externo
                     variante="boya"
                     icono={<MessageCircle className="size-5" />}
-                    className="mt-8 self-start"
+                    className="mt-6 self-start lg:mt-8"
                   >
                     Escribir por WhatsApp
                   </BotonLink>
@@ -78,6 +77,16 @@ export function PrimeraClase() {
               </li>
             ))}
           </ol>
+
+          <div className="mt-5 flex items-center gap-4 lg:hidden">
+            <div aria-hidden className="pasos-progreso h-1 flex-1 overflow-hidden rounded-pill bg-tone-fg/15">
+              <span className="block h-full rounded-pill bg-turquesa-400" />
+            </div>
+            <p className="flex items-center gap-2 text-sm font-semibold text-tone-muted">
+              Desliza para ver los 4 pasos
+              <MoveRight aria-hidden className="size-4 text-turquesa-400" />
+            </p>
+          </div>
         </div>
       </div>
     </Section>

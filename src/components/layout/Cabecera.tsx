@@ -1,6 +1,7 @@
 import { MessageCircle } from "lucide-react";
 import { BotonLink } from "@/components/ui/Boton";
-import { whatsappUrl } from "@/lib/contacto";
+import { SITE } from "@/content/site";
+import { TEL_URL, whatsappUrl } from "@/lib/contacto";
 import { Logo } from "./Logo";
 import MenuMovil from "./MenuMovil";
 import { NAV } from "./navegacion";
@@ -9,7 +10,7 @@ import { NAV } from "./navegacion";
 // scroll-driven (.cabecera-fondo). Sin soporte, el fondo está siempre.
 export function Cabecera() {
   return (
-    <header data-tone="abismo" className="fixed inset-x-0 top-0 z-50 text-tone-fg">
+    <header data-tone="abismo" className="cabecera fixed inset-x-0 top-0 z-50 text-tone-fg">
       <div
         aria-hidden
         className="cabecera-fondo absolute inset-0 border-b border-tone-line bg-marino-950/92 backdrop-blur-md"
@@ -23,12 +24,13 @@ export function Cabecera() {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="group/nav relative inline-flex min-h-11 items-center px-3.5 text-[0.95rem] font-semibold"
+                  data-nav
+                  className="group/nav relative inline-flex min-h-11 items-center px-3.5 text-[0.95rem] font-semibold text-tone-fg/80 transition-colors duration-(--dur-base) hover:text-tone-fg aria-[current]:text-tone-fg"
                 >
                   {item.nombre}
                   <span
                     aria-hidden
-                    className="absolute inset-x-3.5 bottom-2 h-0.5 origin-left scale-x-0 rounded-pill bg-turquesa-400 transition-transform duration-(--dur-base) ease-out-expo group-hover/nav:scale-x-100 group-focus-visible/nav:scale-x-100"
+                    className="absolute inset-x-3.5 bottom-2 h-0.5 origin-left scale-x-0 rounded-pill bg-turquesa-400 transition-transform duration-(--dur-base) ease-out-expo group-hover/nav:scale-x-100 group-focus-visible/nav:scale-x-100 group-aria-[current]/nav:scale-x-100 group-aria-[current]/nav:bg-boya-400"
                   />
                 </a>
               </li>
@@ -46,9 +48,18 @@ export function Cabecera() {
           >
             Reservar cupo
           </BotonLink>
-          <MenuMovil items={NAV} whatsapp={whatsappUrl()} />
+          <MenuMovil
+            items={NAV}
+            whatsapp={whatsappUrl()}
+            telefono={{ href: TEL_URL, visible: SITE.telefono.visible }}
+          />
         </div>
       </div>
+      {/* Progreso de lectura (scroll-driven; oculto sin soporte). */}
+      <div
+        aria-hidden
+        className="progreso-scroll absolute inset-x-0 bottom-0 h-[3px] bg-linear-to-r from-turquesa-400 via-agua-300 to-boya-400"
+      />
     </header>
   );
 }

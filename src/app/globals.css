@@ -293,3 +293,341 @@ p {
     opacity: 1;
   }
 }
+
+/* ───────────────────────── Interacción y navegación ─────────────────────────
+   Todo lo de abajo es mejora progresiva: sin JS (ScrollEspia) o sin soporte
+   de scroll-driven, la página se ve y se usa igual. */
+
+/* Titulares: cada palabra sube desde su línea de base. El recorte deja pasar
+   las tildes por arriba (inset negativo) y solo corta por abajo. */
+.palabra {
+  display: inline-block;
+  clip-path: inset(-0.35em -0.1em 0 -0.1em);
+}
+
+.palabra > span {
+  display: inline-block;
+}
+
+@keyframes palabra-sube {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+[data-reveal="titular"][data-reveal-state="armed"] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal="titular"][data-reveal-state="armed"] .palabra > span {
+  transform: translateY(110%);
+}
+
+[data-reveal="titular"][data-reveal-state="armed"] .entradilla {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+[data-reveal="titular"][data-reveal-state="play"] {
+  animation: none;
+}
+
+[data-reveal="titular"][data-reveal-state="play"] .palabra > span {
+  animation: palabra-sube var(--dur-escena) var(--ease-out-expo) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+[data-reveal="titular"][data-reveal-state="play"] .entradilla {
+  animation: aparecer var(--dur-escena) var(--ease-out-expo) 260ms both;
+}
+
+/* Fotos: entran creciendo un poco (el giro va en `rotate`, no se pisa). */
+@keyframes crecer-foto {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-reveal="foto"][data-reveal-state="armed"] {
+  transform: translateY(1.5rem) scale(0.92);
+}
+
+[data-reveal="foto"][data-reveal-state="play"] {
+  animation-name: crecer-foto;
+}
+
+/* Cabecera: en móvil se esconde al bajar y vuelve al subir. */
+.cabecera {
+  transition: transform 400ms var(--ease-out-expo);
+}
+
+@media (max-width: 1023.98px) {
+  html[data-scroll-dir="abajo"]:not([data-menu]) .cabecera:not(:focus-within) {
+    transform: translateY(-100%);
+  }
+}
+
+html[data-menu] {
+  overflow: hidden;
+}
+
+html[data-menu] .cabecera-fondo {
+  animation: none;
+  opacity: 1;
+}
+
+/* Menú móvil: el panel baja y los enlaces entran escalonados. */
+@keyframes menu-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.menu-panel {
+  animation: menu-entra 350ms var(--ease-out-expo) both;
+}
+
+.menu-panel .menu-item {
+  animation: aparecer 600ms var(--ease-out-expo) both;
+  animation-delay: calc(80ms + var(--i, 0) * 50ms);
+}
+
+/* Barra de acciones en móvil: aparece al pasar el hero y se retira al llegar
+   al formulario (para no tapar los campos) y al pie. */
+.barra-movil {
+  transform: translateY(110%);
+  visibility: hidden;
+  transition:
+    transform 450ms var(--ease-out-expo),
+    visibility 450ms;
+}
+
+html[data-barra] .barra-movil {
+  transform: none;
+  visibility: visible;
+}
+
+/* Con la barra activa, el botón flotante sobra en móvil. */
+@media (max-width: 639.98px) {
+  html[data-espia] .wa-flotante {
+    display: none;
+  }
+}
+
+/* Carril elegido desde el hero (:target): un destello y el número en boya. */
+@keyframes destello {
+  from {
+    background-color: rgb(244 210 60 / 0.55);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.carril:target > article {
+  animation: destello 1800ms var(--ease-out-expo) 300ms both;
+}
+
+/* Preguntas: la respuesta entra con un fundido corto al abrir. */
+details[open] > .faq-respuesta {
+  animation: aparecer var(--dur-lenta) var(--ease-out-expo) both;
+}
+
+/* Pestañas de sucursal: en móvil, --mc columnas × --mr filas; desde sm, una
+   fila de --n. La pastilla se desliza a la celda elegida (--col, --row, --i). */
+.tabs-sucursal {
+  grid-template-columns: repeat(var(--mc), minmax(0, 1fr));
+}
+
+.tab-indicador {
+  width: calc((100% - 0.75rem) / var(--mc));
+  height: calc((100% - 0.75rem) / var(--mr));
+  transform: translate(calc(var(--col) * 100%), calc(var(--row) * 100%));
+  transition: transform var(--dur-lenta) var(--ease-out-expo);
+}
+
+@media (min-width: 640px) {
+  .tabs-sucursal {
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  }
+
+  .tab-indicador {
+    width: calc((100% - 0.75rem) / var(--n));
+    height: calc(100% - 0.75rem);
+    transform: translateX(calc(var(--i) * 100%));
+  }
+}
+
+/* Carruseles con scroll-snap sin barra visible. */
+.sin-barra {
+  scrollbar-width: none;
+}
+
+.sin-barra::-webkit-scrollbar {
+  display: none;
+}
+
+.progreso-scroll,
+.pasos-progreso {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  @keyframes llenar {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Progreso de lectura bajo la cabecera. */
+  .progreso-scroll {
+    display: block;
+    transform-origin: left;
+    animation: llenar linear both;
+    animation-timeline: scroll(root);
+  }
+
+  /* Progreso del carrusel de pasos (móvil). */
+  .pasos {
+    timeline-scope: --pasos;
+  }
+
+  .pasos-lista {
+    scroll-timeline: --pasos inline;
+  }
+
+  .pasos-progreso {
+    display: block;
+  }
+
+  .pasos-progreso > span {
+    transform-origin: left;
+    animation: llenar linear both;
+    animation-timeline: --pasos;
+  }
+
+  /* En escritorio, el paso que se lee queda a plena luz. */
+  @keyframes paso-en-foco {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    32%,
+    68% {
+      opacity: 1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .paso-foco {
+      animation: paso-en-foco linear both;
+      animation-timeline: view();
+    }
+  }
+
+  /* Galería: la tira se desliza con el scroll de la página. */
+  @keyframes deslizar-galeria {
+    from {
+      transform: translateX(5rem);
+    }
+    to {
+      transform: translateX(-9rem);
+    }
+  }
+
+  @media (min-width: 1024px) and (hover: hover) {
+    .galeria-tira {
+      animation: deslizar-galeria linear both;
+      animation-timeline: view();
+    }
+  }
+
+  /* Foto de grupo: entra un poco acercada y se asienta mientras sube. */
+  @keyframes alejar {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .foto-alejar {
+    animation: alejar linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 55%;
+  }
+}
+
+/* Visor de fotos (<dialog>): fundido del fondo y la foto entra creciendo. */
+.visor[open] {
+  animation: aparecer 300ms var(--ease-out-expo) both;
+}
+
+.visor[open]::backdrop {
+  animation: fundido 300ms ease-out both;
+}
+
+.visor-foto {
+  animation: crecer-visor 450ms var(--ease-out-expo) both;
+}
+
+@keyframes fundido {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes crecer-visor {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+/* Con el visor abierto, la página de fondo no se desplaza. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progreso-scroll,
+  .pasos-progreso > span,
+  .paso-foco,
+  .galeria-tira,
+  .foto-alejar,
+  .visor[open],
+  .visor[open]::backdrop,
+  .visor-foto {
+    animation: none !important;
+  }
+
+  .progreso-scroll {
+    display: none;
+  }
+
+  .paso-foco {
+    opacity: 1;
+  }
+
+  .cabecera {
+    transform: none !important;
+  }
+}

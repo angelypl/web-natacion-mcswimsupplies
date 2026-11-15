@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { Check, CreditCard, MapPin, MessageCircle } from "lucide-react";
 import { Corchera } from "@/components/brand/Corchera";
@@ -8,7 +9,7 @@ import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
 import { CARRILES, INSCRIPCION } from "@/content/programas";
 import { cn } from "@/lib/cn";
-import { formatoPesos, whatsappUrl } from "@/lib/contacto";
+import { formatoPesos, textoSucursales, whatsappUrl } from "@/lib/contacto";
 
 // Los programas son carriles de la piscina: la sección es agua (azul
 // piscina) y cada programa está separado por una corchera.
@@ -29,27 +30,33 @@ export function Carriles() {
           {CARRILES.map((carril, i) => {
             const foto = FOTOS[carril.foto];
             return (
-              <li key={carril.id}>
+              <li key={carril.id} id={`carril-${carril.numero}`} className="carril scroll-mt-20">
                 <Corchera />
                 <article
                   aria-labelledby={`carril-${carril.id}`}
-                  className="grid grid-cols-1 gap-8 py-10 md:grid-cols-12 md:items-center md:gap-8 lg:py-14"
+                  className="-mx-3 grid grid-cols-1 gap-6 rounded-card px-3 py-9 md:grid-cols-12 md:items-center md:gap-8 lg:py-14"
                 >
-                  <div className="flex items-end gap-5 md:col-span-12 lg:col-span-2 lg:block">
-                    <p className="font-display font-extrabold uppercase leading-none" data-reveal>
-                      <span className="block text-xl">Carril</span>
-                      <span className="block text-display-2xl tabular-nums">{carril.numero}</span>
-                    </p>
-                  </div>
+                  {/* En escritorio el número ocupa su columna; en móvil va como chapa sobre la foto. */}
+                  <p
+                    className="hidden font-display font-extrabold uppercase leading-none lg:col-span-2 lg:block"
+                    data-reveal
+                  >
+                    <span className="block text-xl">Carril</span>
+                    <span className="block text-display-2xl tabular-nums">{carril.numero}</span>
+                  </p>
 
-                  <div className="md:col-span-5 lg:col-span-4">
+                  <div className="relative md:col-span-5 lg:col-span-4">
+                    <p className="absolute -left-1 -top-4 z-10 -rotate-3 rounded-pill bg-marino-950 px-4 py-1.5 font-display text-2xl font-extrabold uppercase tabular-nums text-espuma-50 shadow-flota lg:hidden">
+                      Carril {carril.numero}
+                    </p>
                     <div
+                      data-reveal="foto"
                       className={cn(
                         "rounded-card border-[5px] border-espuma-50 bg-espuma-50 shadow-hondo transition-transform duration-(--dur-lenta) ease-spring-soft hover:rotate-0",
                         i % 2 === 0 ? "-rotate-[1.5deg]" : "rotate-[1.5deg]",
                       )}
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-[calc(var(--radius-card)-5px)] sm:aspect-[4/3]">
                         <Image
                           src={foto.src}
                           alt={foto.alt}
@@ -63,7 +70,7 @@ export function Carriles() {
                     </div>
                   </div>
 
-                  <div className="md:col-span-7 lg:col-span-4">
+                  <div className="md:col-span-7 lg:col-span-4" data-reveal style={{ "--reveal-i": 1 } as CSSProperties}>
                     <h3
                       id={`carril-${carril.id}`}
                       className="font-display text-display-md font-extrabold uppercase"
@@ -80,13 +87,17 @@ export function Carriles() {
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-5 flex items-center gap-2 font-semibold">
-                      <MapPin aria-hidden className="size-5" />
-                      Sucursal {carril.sucursales}
+                    <p className="mt-5 flex items-start gap-2 font-semibold">
+                      <MapPin aria-hidden className="mt-0.5 size-5 shrink-0" />
+                      {textoSucursales(carril.sucursalIds)}
                     </p>
                   </div>
 
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between md:col-span-12 lg:col-span-2 lg:flex-col lg:items-stretch">
+                  <div
+                    className="flex items-end justify-between gap-4 md:col-span-12 lg:col-span-2 lg:flex-col lg:items-stretch"
+                    data-reveal
+                    style={{ "--reveal-i": 2 } as CSSProperties}
+                  >
                     <p>
                       <span className="block text-sm font-bold">Mensualidad</span>
                       <span className="font-display text-display-md font-extrabold tabular-nums">

@@ -5,6 +5,10 @@ import { Etiqueta } from "@/components/ui/Etiqueta";
 import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
+import { SITE } from "@/content/site";
+import { CLASES_TODA_LA_SEMANA, enLetras, listaNatural } from "@/lib/contacto";
+
+const mayuscula = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1);
 
 const RAZONES = [
   {
@@ -24,8 +28,10 @@ const RAZONES = [
   },
   {
     icono: MapPin,
-    titulo: "Dos sucursales",
-    texto: "Utesa, con piscina semiolímpica, y VivirMás, con área poco profunda para los más chicos.",
+    titulo: `${mayuscula(enLetras(SITE.sucursales.length))} sucursales`,
+    texto: `${listaNatural(SITE.sucursales.map((s) => s.nombre))}${
+      CLASES_TODA_LA_SEMANA ? ": entre todas hay clases los siete días de la semana" : ""
+    }.`,
   },
 ];
 
@@ -37,8 +43,8 @@ export function PorQue() {
           <div className="parallax relative rounded-blob border-[6px] border-white bg-white shadow-hondo [--giro:-2.5deg] [--parallax:1.5rem]">
             <div className="relative aspect-[5/4] overflow-hidden rounded-[calc(var(--radius-blob)-6px)]">
               <Image
-                src={FOTOS.equipo.src}
-                alt={FOTOS.equipo.alt}
+                src={FOTOS.equipoBorde.src}
+                alt={FOTOS.equipoBorde.alt}
                 fill
                 quality={60}
                 placeholder="blur"
@@ -57,7 +63,7 @@ export function PorQue() {
           <Titular
             id="porque-titulo"
             titulo="Aquí nadie se queda en el borde"
-            entradilla="Grupos por nivel, instructores certificados y dos piscinas pensadas para cada etapa. Así el miedo se va y la técnica llega."
+            entradilla={`Grupos por nivel, instructores certificados y ${enLetras(SITE.sucursales.length)} sucursales para cada etapa y cada horario. Así el miedo se va y la técnica llega.`}
           />
 
           <ul className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2">

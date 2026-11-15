@@ -7,7 +7,7 @@ import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { SEMANA, SITE, type Sucursal } from "@/content/site";
 import { cn } from "@/lib/cn";
-import { TEL_URL, listaNatural, whatsappUrl } from "@/lib/contacto";
+import { CLASES_TODA_LA_SEMANA, TEL_URL, enLetras, listaNatural, whatsappUrl } from "@/lib/contacto";
 
 /** Tira de la semana con los días de clase marcados. La lista accesible va aparte. */
 function Semana({ dias }: { dias: Sucursal["dias"] }) {
@@ -43,8 +43,10 @@ export function Sucursales() {
       <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 md:pb-28 lg:px-8">
         <Titular
           id="sucursales-titulo"
-          titulo="Dos piscinas, una para cada etapa"
-          entradilla="Agua tratada con estándares rigurosos, vestidores cómodos y acceso rápido en Santo Domingo."
+          titulo={`${enLetras(SITE.sucursales.length)} sucursales, una para cada horario`}
+          entradilla={`Elige la que te quede más cerca o la que encaje con tu semana.${
+            CLASES_TODA_LA_SEMANA ? " Entre todas hay clases de lunes a domingo en Santo Domingo." : ""
+          }`}
         />
 
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -56,9 +58,10 @@ export function Sucursales() {
               aria-labelledby={`sucursal-${s.id}`}
               className="flex flex-col rounded-blob border border-tone-line bg-marino-900/70 p-7 sm:p-10"
             >
-              <Etiqueta estilo="turquesa" className="self-start">
-                {s.piscina}
-              </Etiqueta>
+              <div className="flex flex-wrap gap-2">
+                <Etiqueta estilo="turquesa">{s.etiqueta}</Etiqueta>
+                {s.nueva && <Etiqueta estilo="boya">Nueva</Etiqueta>}
+              </div>
               <h3 id={`sucursal-${s.id}`} className="mt-5 font-display text-display-md font-extrabold uppercase">
                 Sucursal {s.nombre}
               </h3>

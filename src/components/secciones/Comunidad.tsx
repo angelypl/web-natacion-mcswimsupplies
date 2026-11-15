@@ -4,6 +4,9 @@ import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
 import { testimoniosVisibles } from "@/content/testimonios";
+import { GaleriaComunidad } from "./GaleriaComunidad";
+
+const GALERIA = ["sonrisaFideo", "coachNino", "clavado", "tablaCoach", "adultos", "equipoBorde"] as const;
 
 export function Comunidad() {
   const testimonios = testimoniosVisibles();
@@ -16,20 +19,24 @@ export function Comunidad() {
         entradilla="Niños que pierden el miedo, jóvenes que afinan la técnica y adultos que por fin se animan. Cada uno en su carril."
       />
 
-      <figure className="mt-12" data-reveal>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-blob shadow-hondo sm:aspect-[16/9] lg:aspect-[21/9]">
+      <div className="mt-12" data-reveal="foto">
+        {/* La foto de grupo se muestra entera, con su proporción original:
+            cualquier marco más panorámico corta cabezas o pies. Al entrar en
+            pantalla se aleja un poco (zoom suave ligado al scroll). */}
+        <div className="mx-auto max-w-5xl overflow-hidden rounded-blob shadow-hondo">
           <Image
             src={FOTOS.comunidad.src}
             alt={FOTOS.comunidad.alt}
-            fill
             quality={60}
             placeholder="blur"
-            sizes="(min-width: 1280px) 1216px, 94vw"
-            className="object-cover object-[50%_65%]"
+            sizes="(min-width: 1088px) 1024px, 94vw"
+            className="foto-alejar block h-auto w-full"
           />
         </div>
-        <figcaption className="mt-4 text-sm text-tone-muted">Alumnos e instructores de MC Swim después de clase.</figcaption>
-      </figure>
+      </div>
+
+      {/* En escritorio la tira también avanza sola con el scroll de la página. */}
+      <GaleriaComunidad fotos={GALERIA.map((clave) => FOTOS[clave])} />
 
       {testimonios.length > 0 && (
         <ul className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
