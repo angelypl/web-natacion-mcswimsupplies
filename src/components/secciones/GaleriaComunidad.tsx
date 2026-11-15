@@ -76,7 +76,7 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
   const foto = abierta === null ? null : fotos[abierta];
 
   return (
-    <div className="relative mt-10">
+    <div className="relative mt-8">
       {/* Flechas solo con puntero fino: en táctil se desliza con el dedo.
           Van encima de la tira para no chocar con el botón flotante. */}
       <div className="mb-2 hidden justify-end gap-3 [@media(hover:hover)]:flex">
@@ -99,7 +99,7 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
             <li
               key={f.alt}
               className={cn(
-                "galeria-tira w-[70vw] max-w-xs shrink-0 snap-center sm:w-72",
+                "galeria-tira w-[58vw] max-w-60 shrink-0 snap-center sm:w-56",
                 i % 2 === 0 ? "-rotate-1" : "rotate-1 translate-y-3",
               )}
             >
@@ -116,7 +116,7 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
                     fill
                     quality={60}
                     placeholder="blur"
-                    sizes="(min-width: 640px) 288px, 70vw"
+                    sizes="(min-width: 640px) 224px, 58vw"
                     className="object-cover transition-transform duration-(--dur-escena) ease-out-expo group-hover:scale-105"
                   />
                   <span

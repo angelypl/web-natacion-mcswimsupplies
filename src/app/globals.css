@@ -542,24 +542,6 @@ details[open] > .faq-respuesta {
     animation-timeline: --pasos;
   }
 
-  /* En escritorio, el paso que se lee queda a plena luz. */
-  @keyframes paso-en-foco {
-    0%,
-    100% {
-      opacity: 0.4;
-    }
-    32%,
-    68% {
-      opacity: 1;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .paso-foco {
-      animation: paso-en-foco linear both;
-      animation-timeline: view();
-    }
-  }
 
   /* Galería: la tira se desliza con el scroll de la página. */
   @keyframes deslizar-galeria {
@@ -629,7 +611,6 @@ html:has(dialog[open]) {
 @media (prefers-reduced-motion: reduce) {
   .progreso-scroll,
   .pasos-progreso > span,
-  .paso-foco,
   .galeria-tira,
   .foto-alejar,
   .visor[open],
@@ -642,11 +623,35 @@ html:has(dialog[open]) {
     display: none;
   }
 
-  .paso-foco {
-    opacity: 1;
-  }
 
   .cabecera {
     transform: none !important;
   }
+}
+
+/* ───────────────────────── Tratamientos de foto (ronda 3) ─────────────────────────
+   .foto-sticker → personas: marco blanco y un giro leve (hero, Por qué, carriles).
+   .foto-agua    → planos de piscina sobre fondo oscuro: a sangre, con el borde de
+                   abajo en ola (la misma curva que LineaDeAgua) como máscara (pasos).
+   .foto-plana   → fotos de grupo o documento: entera, sin giro ni recorte (comunidad). */
+.foto-agua {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 640' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1440V598C1320 584 1200 574 1080 586S840 626 720 622 480 588 360 580 120 586 0 600Z'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+
+/* Lo elegido en el contexto compartido se marca en las secciones del servidor
+   (EleccionRoot copia la elección a <html data-programa data-sucursal>). */
+html[data-programa="iniciacion"] [data-carril="iniciacion"] .eleccion-marca,
+html[data-programa="formacion"] [data-carril="formacion"] .eleccion-marca,
+html[data-programa="adultos"] [data-carril="adultos"] .eleccion-marca {
+  display: inline-flex;
+}
+
+html[data-sucursal="utesa"] [data-sede="utesa"] .sede-tarjeta,
+html[data-sucursal="vivirmas"] [data-sede="vivirmas"] .sede-tarjeta,
+html[data-sucursal="prado-oriental"] [data-sede="prado-oriental"] .sede-tarjeta,
+html[data-sucursal="estadio-olimpico"] [data-sede="estadio-olimpico"] .sede-tarjeta {
+  border-color: var(--color-turquesa-400);
+  box-shadow: inset 0 0 0 1px var(--color-turquesa-400);
 }

@@ -37,11 +37,11 @@ const RAZONES = [
 
 export function PorQue() {
   return (
-    <Section tone="espuma" aria-labelledby="porque-titulo" className="py-20 md:py-28">
-      <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-10">
+    <Section tone="espuma" aria-labelledby="porque-titulo" className="py-14 md:py-20">
+      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
         <div className="relative order-2 mx-auto w-full max-w-lg lg:order-1 lg:col-span-5">
-          <div className="parallax relative rounded-blob border-[6px] border-white bg-white shadow-hondo [--giro:-2.5deg] [--parallax:1.5rem]">
-            <div className="relative aspect-[5/4] overflow-hidden rounded-[calc(var(--radius-blob)-6px)]">
+          <div className="foto-sticker parallax relative rounded-blob border-[6px] border-white bg-white shadow-hondo [--giro:-2.5deg] [--parallax:1.5rem]">
+            <div className="relative aspect-[16/10] overflow-hidden sm:aspect-[5/4] rounded-[calc(var(--radius-blob)-6px)]">
               <Image
                 src={FOTOS.equipoBorde.src}
                 alt={FOTOS.equipoBorde.alt}
@@ -66,13 +66,13 @@ export function PorQue() {
             entradilla={`Grupos por nivel, instructores certificados y ${enLetras(SITE.sucursales.length)} sucursales para cada etapa y cada horario. Así el miedo se va y la técnica llega.`}
           />
 
-          <ul className="mt-12 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
+          <ul className="mt-8 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
             {RAZONES.map(({ icono: Icono, titulo, texto }, i) => (
               <li
                 key={titulo}
                 data-reveal
                 style={{ "--reveal-i": i } as React.CSSProperties}
-                className="flex gap-4 border-t border-tone-line py-6"
+                className="flex gap-4 border-t border-tone-line py-4 sm:py-5"
               >
                 <Icono aria-hidden className="mt-1 size-7 shrink-0 text-piscina-700" />
                 <div>

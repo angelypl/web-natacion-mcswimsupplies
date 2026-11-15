@@ -156,7 +156,7 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <header className="max-w-2xl" data-reveal>
-            <h2 id="horarios-titulo" className="font-display text-display-lg font-extrabold uppercase">
+            <h2 id="horarios-titulo" className="font-display text-display-lg font-extrabold uppercase xl:whitespace-nowrap">
               La pizarra de horarios
             </h2>
             <p className="mt-4 text-lead text-tone-muted">
@@ -332,12 +332,12 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                         key={dia}
                         style={{ animationDelay: `${n * 50}ms` } as CSSProperties}
                         className={cn(
-                          "grid grid-cols-1 lg:grid-cols-[9rem_minmax(0,1fr)]",
+                          "grid grid-cols-1 lg:grid-cols-[10rem_minmax(0,1fr)]",
                           esHoy && "bg-marino-900",
                           cambio && "motion-safe:animate-[aparecer_450ms_var(--ease-out-expo)_both]",
                         )}
                       >
-                        <h3 className="flex items-center gap-3 px-5 pt-4 font-display text-2xl font-extrabold uppercase text-turquesa-400 sm:px-7 lg:items-start lg:pb-4 lg:pt-6 lg:text-3xl">
+                        <h3 className="flex items-center gap-3 px-5 pt-4 font-display text-2xl font-extrabold uppercase text-turquesa-400 sm:px-7 lg:flex-col lg:items-start lg:gap-1.5 lg:py-5 lg:text-3xl">
                           {diaTitulo(dia)}
                           {esHoy && (
                             <span className="rounded-pill bg-boya-400 px-2.5 py-0.5 font-sans text-sm font-bold normal-case tracking-normal text-marino-950">
@@ -345,7 +345,7 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                             </span>
                           )}
                         </h3>
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(15.5rem,1fr))]">
+                        <ul className="divide-y divide-tone-line">
                           {delDia.map((clase, i) => {
                             const { edad, nota } = detalles(clase, nombresProgramas);
                             const etiquetas =
@@ -358,34 +358,42 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                                 : (clase.programas[0] ?? null);
                             const reservar = { programa: programaTurno, sucursal: sede, turno };
                             return (
-                              <li key={`${clase.time}-${i}`} className="flex flex-col px-5 py-4 sm:px-7 lg:py-5">
-                                <div className="flex items-baseline justify-between gap-3">
-                                  <Hora
-                                    texto={clase.time}
-                                    className={cn(
-                                      "font-display text-[2.5rem] font-extrabold leading-none tabular-nums tracking-tight",
-                                      clase.full && "text-niebla-300 line-through decoration-corchera-600 decoration-[3px]",
+                              <li
+                                key={`${clase.time}-${i}`}
+                                className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 px-5 py-3.5 sm:px-7 lg:grid-cols-[9rem_minmax(0,1fr)_auto] lg:items-center lg:gap-x-6 lg:py-4"
+                              >
+                                <Hora
+                                  texto={clase.time}
+                                  className={cn(
+                                    "font-display text-[2.5rem] font-extrabold leading-none tabular-nums tracking-tight",
+                                    clase.full && "text-niebla-300 line-through decoration-corchera-600 decoration-[3px]",
+                                  )}
+                                />
+                                <div className="min-w-0">
+                                  <p className="flex flex-wrap items-center gap-1.5">
+                                    {clase.full && (
+                                      <span className="rounded-pill bg-corchera-600 px-2.5 py-0.5 text-sm font-bold text-white">
+                                        Cupo lleno
+                                      </span>
                                     )}
-                                  />
-                                  {clase.full && (
-                                    <span className="shrink-0 rounded-pill bg-corchera-600 px-2.5 py-0.5 text-sm font-bold text-white">
-                                      Cupo lleno
-                                    </span>
+                                    {etiquetas.map((e) => (
+                                      <span
+                                        key={e}
+                                        className="rounded-pill border border-tone-line px-2.5 py-0.5 text-sm font-semibold text-agua-300"
+                                      >
+                                        {e}
+                                      </span>
+                                    ))}
+                                  </p>
+                                  {(edad || nota) && (
+                                    <p className="mt-1 text-[0.95rem] leading-snug">
+                                      {edad && <span className="font-semibold">{edad}</span>}
+                                      {edad && nota && <span className="text-tone-muted"> · </span>}
+                                      {nota && <span className="text-tone-muted">{nota}</span>}
+                                    </p>
                                   )}
                                 </div>
-                                <p className="mt-2 flex flex-wrap gap-1.5">
-                                  {etiquetas.map((e) => (
-                                    <span
-                                      key={e}
-                                      className="rounded-pill border border-tone-line px-2.5 py-0.5 text-sm font-semibold text-agua-300"
-                                    >
-                                      {e}
-                                    </span>
-                                  ))}
-                                </p>
-                                {edad && <p className="mt-2 font-semibold">{edad}</p>}
-                                {nota && <p className="text-sm text-tone-muted">{nota}</p>}
-                                <div className="mt-auto flex flex-wrap items-center gap-x-5 pt-2">
+                                <div className="col-span-2 flex flex-wrap items-center gap-x-5 lg:col-span-1 lg:justify-end">
                                   {!clase.full && (
                                     <a
                                       href={enlaceEleccion(reservar, "#inscripcion")}
@@ -393,7 +401,7 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                                         e.preventDefault();
                                         elegir(reservar, "#inscripcion");
                                       }}
-                                      className="group/turno inline-flex min-h-11 items-center gap-1.5 font-bold text-boya-400"
+                                      className="group/turno inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap font-bold text-boya-400"
                                     >
                                       Reservar este turno
                                       <ArrowRight
@@ -415,7 +423,7 @@ export default function SchedulesClient({ branches, unavailable = false, whatsap
                                     )}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group/wa inline-flex min-h-11 items-center gap-2 font-semibold text-tone-fg"
+                                    className="group/wa inline-flex min-h-11 items-center gap-2 whitespace-nowrap font-semibold text-tone-fg"
                                   >
                                     <span className="grid size-7 place-items-center rounded-full bg-whatsapp text-marino-950 transition-transform duration-(--dur-base) ease-spring-soft group-hover/wa:-rotate-12">
                                       <MessageCircle aria-hidden className="size-4" />

@@ -67,13 +67,13 @@ export function Inscripcion() {
               </ol>
             </div>
 
-            <ul className="mt-8 grid grid-cols-1 divide-y divide-tone-line border-y border-tone-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:grid-cols-1 lg:divide-x-0 lg:divide-y">
+            <ul className="mt-6 grid grid-cols-3 gap-2 lg:mt-8 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-tone-line lg:border-y lg:border-tone-line">
               {contacto.map(({ href, externo, icono: Icono, etiqueta, valor, wa }) => (
                 <li key={etiqueta}>
                   <a
                     href={href}
                     {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="group/contacto flex min-h-14 items-center gap-3 py-2.5 sm:px-3 lg:px-0"
+                    className="group/contacto flex min-h-14 flex-col items-center justify-center gap-1.5 rounded-card border border-tone-line px-2 py-2.5 text-center lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-0 lg:px-0 lg:text-left"
                   >
                     <span
                       className={cn(
@@ -84,8 +84,8 @@ export function Inscripcion() {
                       <Icono aria-hidden className="size-5" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-sm text-tone-muted">{etiqueta}</span>
-                      <span className="block truncate font-bold">{valor}</span>
+                      <span className="block text-sm font-semibold lg:font-normal lg:text-tone-muted">{etiqueta}</span>
+                      <span className="hidden truncate font-bold lg:block">{valor}</span>
                     </span>
                   </a>
                 </li>

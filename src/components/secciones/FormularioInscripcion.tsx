@@ -200,7 +200,7 @@ export default function FormularioInscripcion({ programas, sucursales, programaI
     setEstado("abriendo");
     window.open(url, "_blank", "noopener");
     // Estado intermedio visible: el botón dice "Abriendo WhatsApp…" un momento.
-    window.setTimeout(() => setEstado("enviado"), 700);
+    window.setTimeout(() => setEstado("enviado"), 1200);
   };
 
   return (

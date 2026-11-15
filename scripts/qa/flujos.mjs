@@ -52,16 +52,16 @@ const ok = (condicion, mensaje) => {
   await ctx.close();
 }
 
-// 3. Foto sticky de "Así empiezas" sigue al paso que se lee.
+// 3. "Así empiezas" en escritorio: los cuatro pasos en una fila, cada uno con su foto.
 {
-  const ctx = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const ctx = await b.newContext({ viewport: { width: 1366, height: 768 } });
   const p = await ctx.newPage();
   await p.goto(URL_BASE, { waitUntil: "networkidle" });
-  const contador = p.locator("p", { hasText: /^Paso \d de 4$/ });
-  await p.locator("[data-paso='2']").scrollIntoViewIfNeeded();
-  await p.locator("[data-paso='2']").evaluate((el) => el.scrollIntoView({ block: "center" }));
-  await p.waitForTimeout(600);
-  ok((await contador.textContent()) === "Paso 3 de 4", `al leer el paso 3 la foto dice "${await contador.textContent()}"`);
+  const pasos = await p.locator("[data-paso]").evaluateAll((els) =>
+    els.map((e) => ({ top: Math.round(e.getBoundingClientRect().top), foto: Boolean(e.querySelector("img[alt]:not([alt=''])")) })),
+  );
+  const enFila = pasos.length === 4 && pasos.every((x) => Math.abs(x.top - pasos[0].top) < 4);
+  ok(enFila && pasos.every((x) => x.foto), `pasos: ${pasos.length} en fila=${enFila}, con foto=${pasos.filter((x) => x.foto).length}`);
   await ctx.close();
 }
 
@@ -78,6 +78,13 @@ const ok = (condicion, mensaje) => {
   await p.fill("#nombre", "Ana Pérez");
   await p.fill("#telefono", "829 555 1234");
   await p.fill("#comentarios", "Asma leve");
+  // Registra si el botón pasó por "Abriendo WhatsApp…" (dura un instante).
+  await p.evaluate(() => {
+    const boton = document.querySelector("button[type=submit]");
+    new MutationObserver(() => {
+      if (/Abriendo WhatsApp/.test(boton.textContent)) window.__abriendo = true;
+    }).observe(boton, { childList: true, subtree: true, characterData: true });
+  });
   const [popup] = await Promise.all([ctx.waitForEvent("page"), enviar.click()]);
   // wa.me redirige a api.whatsapp.com, que codifica los espacios como "+".
   const destino = new URL(popup.url());
@@ -85,7 +92,7 @@ const ok = (condicion, mensaje) => {
   const telefono = destino.searchParams.get("phone") ?? destino.pathname;
   ok(telefono.includes("18298830129"), `abre WhatsApp al 18298830129 (${destino.host})`);
   ok(texto.includes("Ana Pérez") && texto.includes("Asma leve") && texto.includes("Formación"), "el mensaje lleva nombre, comentario y programa");
-  ok(await p.getByRole("button", { name: /Abriendo WhatsApp/ }).isVisible(), "estado intermedio: el botón dice \"Abriendo WhatsApp…\"");
+  ok(await p.evaluate(() => window.__abriendo === true), "estado intermedio: el botón dice \"Abriendo WhatsApp…\"");
   await p.getByText("Listo. Abrimos WhatsApp").waitFor({ timeout: 3000 }).catch(() => {});
   ok(await p.getByText("Listo. Abrimos WhatsApp").isVisible(), "confirmación visible (aria-live)");
   ok(await p.getByRole("link", { name: "Abrir WhatsApp de nuevo" }).isVisible(), "enlace de respaldo por si WhatsApp no se abrió");
