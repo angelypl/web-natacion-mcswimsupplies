@@ -184,6 +184,69 @@ export default function Styleguide() {
         </Section>
       ))}
 
+      <Section tone="blanco" className="py-16">
+        <h2 className={h2}>Acciones: jerarquía y color</h2>
+        <ul className="mt-6 max-w-3xl space-y-3 text-tone-muted">
+          <li>
+            <span className="font-bold text-tone-fg">Boya = acción principal dentro de la página.</span> Siempre
+            &quot;Reservar mi cupo&quot; y siempre al formulario. Nada que salga de la página va en boya.
+          </li>
+          <li>
+            <span className="font-bold text-tone-fg">Verde = sale a WhatsApp.</span> Siempre y solo eso: botón{" "}
+            <code>boton-wa</code> o, en enlaces de texto, el ícono en círculo verde.
+          </li>
+          <li>
+            <span className="font-bold text-tone-fg">Contorno o subrayado = secundarias:</span> &quot;Ver horarios
+            de…&quot;, &quot;Cómo llegar&quot;, &quot;Llamar&quot;.
+          </li>
+          <li>
+            <span className="font-bold text-tone-fg">Boya fuera de botones:</span> solo el aviso &quot;Hoy&quot; de la
+            pizarra, &quot;Reservar este turno&quot; (va al mismo formulario) y el foco de teclado sobre fondos oscuros.
+          </li>
+        </ul>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <BotonLink href="#">Reservar mi cupo</BotonLink>
+          <a href="#" className="boton-wa">
+            <MessageCircle aria-hidden className="size-5" />
+            Preguntar por WhatsApp
+          </a>
+          <a href="#" className="group/wa inline-flex min-h-11 items-center gap-2 font-semibold">
+            <span className="grid size-7 place-items-center rounded-full bg-whatsapp text-marino-950">
+              <MessageCircle aria-hidden className="size-4" />
+            </span>
+            Preguntar
+          </a>
+          <BotonLink href="#" variante="contorno" icono={<Navigation className="size-5" />}>
+            Cómo llegar
+          </BotonLink>
+        </div>
+
+        <h2 className={`${h2} mt-16`}>Tratamientos de foto</h2>
+        <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <figure>
+            <div className="foto-sticker aspect-[4/3] -rotate-2 rounded-card border-[5px] border-espuma-50 bg-piscina-500 shadow-hondo" />
+            <figcaption className="mt-4 text-tone-muted">
+              <span className="font-bold text-tone-fg">Sticker</span>: personas (hero, Por qué, carriles). Marco blanco
+              y giro leve.
+            </figcaption>
+          </figure>
+          <figure>
+            <div className="foto-agua aspect-[4/3] rounded-t-card bg-piscina-500" />
+            <figcaption className="mt-4 text-tone-muted">
+              <span className="font-bold text-tone-fg">Agua</span>: planos de piscina sobre fondo oscuro (pasos). A
+              sangre, con el borde de abajo en ola.
+            </figcaption>
+          </figure>
+          <figure>
+            <div className="foto-plana aspect-[4/3] rounded-blob bg-piscina-500 shadow-hondo" />
+            <figcaption className="mt-4 text-tone-muted">
+              <span className="font-bold text-tone-fg">Plana</span>: fotos de grupo (comunidad). Entera, sin giro ni
+              recorte.
+            </figcaption>
+          </figure>
+        </div>
+      </Section>
+
       <Section tone="marino" container="none" className="relative py-16">
         <PatronCarriles />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

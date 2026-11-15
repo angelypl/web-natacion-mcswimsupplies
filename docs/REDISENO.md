@@ -79,6 +79,12 @@ Un commit local por fase sobre el punto de partida `0bd216b`. Medidas antes/desp
 - **Prueba social**: franja de hechos sacados de los datos (sucursales, días con clase, edad mínima, programas) y acceso a Instagram junto a la foto de grupo. `TODO_CLIENTE`: el hueco de testimonios está diseñado y aparece en cuanto haya uno con `esEjemplo: false`.
 - **Pie**: una pantalla como mucho; navegación en una fila, contacto en una columna, rótulo más pequeño en móvil y sin repetir las sucursales.
 
+### Fase 3: pulido visual
+- **Fotos**: se incorporan las tres que no se usaban, cada una con un `alt` de lo que se ve: `MCB07464.jpg` (hero), `GM106022.jpg` (paso 1, los cuatro instructores) y `02488C2A-….jpeg` (paso 3, tres alumnos en el borde). Ninguna foto se repite en secciones contiguas. "Por qué" mantiene `GM106103.jpg` (dos instructores en el borde), que es la que usa producción para el equipo: así lo pidió el cliente el 2026-11-14, por eso la de los cuatro instructores no va ahí.
+- **Tres tratamientos con criterio de uso** (`globals.css`, `/styleguide`): sticker para personas, agua (a sangre con borde en ola) para los planos de piscina de los pasos, y plana para la foto de grupo, que nunca se recorta.
+- **Boya** reservado para "Reservar mi cupo" y el aviso "Hoy". Salen de boya: la etiqueta "Nueva" (turquesa), el paso activo (ya no existe), el bloque "¿No encuentras tu horario?" (ahora una línea con el botón de WhatsApp), el subrayado de la sección activa y el final de la barra de progreso.
+- **Ritmo**: secuencia de tonos abismo → espuma → piscina → marino → espuma (pizarra abismo) → abismo → blanco → marino → espuma → abismo. El tramo azul de Carriles bajó de 3 a 1,6 pantallas en 1366; los rellenos verticales pasaron de `py-20/28` a `py-14/20` o `py-16/24`.
+
 ## Cambios de contenido que conviene revisar
 - `TODO_CLIENTE` **Testimonios**: no consta que sean reales. Están marcados `esEjemplo` y solo se ven en desarrollo, con la etiqueta "Ejemplo, falta confirmar". En producción no saldrían.
 - `TODO_CLIENTE` **Logo**: pedir SVG o PNG transparente. El JPEG tiene fondo blanco (va sobre una chapa blanca).

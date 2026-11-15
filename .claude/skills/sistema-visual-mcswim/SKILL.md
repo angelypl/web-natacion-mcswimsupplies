@@ -65,6 +65,16 @@ La referencia viva está en `/styleguide` (noindex). Los tokens están en `@them
 - Un solo acceso persistente por ancho: cabecera en ≥ 640 px; barra del pulgar en móvil.
 - `qa:flujos` comprueba la regla (colores y texto único de la acción principal).
 
+### Boya (amarillo)
+- Reservado para la acción principal (botones "Reservar mi cupo") y **un único aviso**: "Hoy" en la pizarra de horarios. También "Reservar este turno" (lleva al mismo formulario) y el foco de teclado sobre fondos oscuros (`--tone-focus`).
+- No va en etiquetas ("Nueva" es turquesa), pasos, subrayados de navegación, barras de progreso ni bloques de sección.
+
+### Tratamientos de foto
+- `.foto-sticker`: personas (hero, Por qué, carriles). Marco blanco de 5–6 px y giro leve.
+- `.foto-agua`: planos de piscina sobre fondo oscuro (pasos). A sangre, borde inferior en ola (máscara con la curva de `LineaDeAgua`).
+- `.foto-plana`: fotos de grupo o documento (comunidad). Entera, con su proporción, sin giro ni recorte.
+- Ninguna foto se repite en secciones contiguas (reparto en `src/content/fotos.ts`).
+
 ### Reglas
 - Los programas son **carriles** (Carril 1: 2–3 años, Carril 2: 4+ años, Carril 3: adultos). Los números de carril solo se usan ahí y en los pasos de inscripción (secuencias reales).
 - Nada de eyebrow en mayúsculas sobre cada título, ni `→` al final de cada botón, ni la misma tarjeta repetida en todas las secciones.

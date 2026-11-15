@@ -29,7 +29,7 @@ export function Cabecera() {
                   {item.nombre}
                   <span
                     aria-hidden
-                    className="absolute inset-x-3.5 bottom-2 h-0.5 origin-left scale-x-0 rounded-pill bg-turquesa-400 transition-transform duration-(--dur-base) ease-out-expo group-hover/nav:scale-x-100 group-focus-visible/nav:scale-x-100 group-aria-[current]/nav:scale-x-100 group-aria-[current]/nav:bg-boya-400"
+                    className="absolute inset-x-3.5 bottom-2 h-0.5 origin-left scale-x-0 rounded-pill bg-turquesa-400 transition-transform duration-(--dur-base) ease-out-expo group-hover/nav:scale-x-100 group-focus-visible/nav:scale-x-100 group-aria-[current]/nav:scale-x-100"
                   />
                 </a>
               </li>
@@ -56,7 +56,7 @@ export function Cabecera() {
       {/* Progreso de lectura (scroll-driven; oculto sin soporte). */}
       <div
         aria-hidden
-        className="progreso-scroll absolute inset-x-0 bottom-0 h-[3px] bg-linear-to-r from-turquesa-400 via-agua-300 to-boya-400"
+        className="progreso-scroll absolute inset-x-0 bottom-0 h-[3px] bg-linear-to-r from-turquesa-400 to-agua-300"
       />
     </header>
   );
