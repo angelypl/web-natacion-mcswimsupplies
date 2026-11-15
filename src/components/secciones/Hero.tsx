@@ -20,7 +20,7 @@ export function Hero() {
     <section id="top" data-tone="abismo" className="relative overflow-hidden bg-tone-bg text-tone-fg">
       <PatronCarriles />
 
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 pb-12 pt-24 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-8 lg:px-8 lg:pb-14 lg:pt-28">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 pb-12 pt-24 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-8 lg:px-8 lg:pb-14 lg:pt-28">
         <div className="flex flex-col items-start lg:col-span-7">
           <Etiqueta estilo="turquesa" className="mb-4 lg:mb-5">
             Santo Domingo, {enLetras(SITE.sucursales.length)} sucursales

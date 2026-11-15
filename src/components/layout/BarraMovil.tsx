@@ -16,8 +16,8 @@ export function BarraMovil() {
       className="barra-movil fixed inset-x-0 bottom-0 z-40 border-t border-tone-line bg-marino-950/94 px-4 pt-3 text-tone-fg backdrop-blur-md sm:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
-      <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2.5">
-        <a href="#horarios" className={claseBoton("contorno", "barra-horarios px-5")}>
+      <div className="grid grid-cols-[8.75rem_minmax(0,1fr)] gap-2.5">
+        <a href="#horarios" className={claseBoton("contorno", "barra-horarios h-12 whitespace-nowrap px-4")}>
           <Clock aria-hidden className="size-5" />
           Horarios
         </a>
@@ -25,12 +25,12 @@ export function BarraMovil() {
           href={whatsappUrl("Hola MC Swim Academy, quiero preguntar por un horario.")}
           target="_blank"
           rel="noopener noreferrer"
-          className="boton-wa barra-preguntar hidden px-5"
+          className="boton-wa barra-preguntar hidden h-12 whitespace-nowrap px-4"
         >
           <MessageCircle aria-hidden className="size-5" />
           Preguntar
         </a>
-        <a href="#inscripcion" className={claseBoton("boya", "onda")}>
+        <a href="#inscripcion" className={claseBoton("boya", "onda h-12 whitespace-nowrap px-4")}>
           {ACCION_PRINCIPAL}
         </a>
       </div>

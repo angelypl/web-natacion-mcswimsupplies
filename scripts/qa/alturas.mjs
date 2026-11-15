@@ -25,6 +25,22 @@ const NOMBRES = {
   pie: "pie",
 };
 
+// Línea de base de la ronda 3 (build de producción, 2026-11-15, commit 0bd216b).
+export const LINEA_BASE = {
+  movil: { hero: 1.9, "por qué": 1.5, carriles: 4.0, "así empiezas": 1.0, horarios: 2.4, sucursales: 3.9, comunidad: 1.2, "inscripción": 2.7, preguntas: 1.3, pie: 2.0, TOTAL: 21.9 },
+  portatil: { hero: 1.3, "por qué": 1.1, carriles: 3.0, "así empiezas": 3.0, horarios: 1.7, sucursales: 2.6, comunidad: 2.2, "inscripción": 1.7, preguntas: 1.3, pie: 1.4, TOTAL: 19.3 },
+};
+
+export function compararConLineaBase(informe) {
+  console.log("sección".padEnd(14), "390×844".padStart(14), "1366×768".padStart(14));
+  const secciones = informe.movil.filas.map((f) => f.seccion);
+  const celda = (vp, s) => {
+    const ahora = s === "TOTAL" ? informe[vp].totalPantallas : informe[vp].filas.find((f) => f.seccion === s)?.pantallas;
+    return `${LINEA_BASE[vp][s] ?? "—"} → ${ahora ?? "—"}`.padStart(14);
+  };
+  for (const s of [...secciones, "TOTAL"]) console.log(s.padEnd(14), celda("movil", s), celda("portatil", s));
+}
+
 export async function medirAlturas(pagina) {
   return pagina.evaluate((nombres) => {
     const vh = window.innerHeight;

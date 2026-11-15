@@ -58,9 +58,54 @@ Medido contra `next dev` (no contra el build de producción; el build compila si
 - `qa:flujos` 20/20 y `qa:medir` sin problemas en los nueve anchos (axe: 0) con cuatro sucursales.
 - `scripts/qa/sedes.mjs` saca capturas de cada pestaña de horarios, las tarjetas de sucursales, un carril y el formulario.
 
+## Tercera ronda (2026-11-15)
+
+Todo contra el **build de producción** con los horarios de `mock-horarios.mjs` (copia de producción para Utesa y VivirMás).
+
+```bash
+npm run qa:medir -- http://localhost:3002/ [carpeta] [chromium,webkit,firefox]   # + alto por sección
+npm run qa:flujos -- http://localhost:3002/                                     # 37 comprobaciones, 3 motores
+node scripts/qa/alturas.mjs http://localhost:3002/                              # solo el alto por sección
+node scripts/qa/capturas-ronda.mjs http://localhost:3002/ qa-capturas/ronda-3/x # 390×844, 1366×768, 1440×900
+```
+
+### Alto por sección, en pantallas (390×844 / 1366×768)
+| Sección | Antes | Después |
+|---|---|---|
+| Hero | 1,9 / 1,3 | 1,3 / 1,1 |
+| Por qué | 1,5 / 1,1 | 1,3 / 0,9 |
+| Carriles | 4,0 / 3,0 | 3,0 / 1,6 |
+| Así empiezas | 1,0 / 3,0 | 1,0 / 1,0 |
+| Horarios | 2,4 / 1,7 | 2,1 / 1,4 |
+| Sucursales | 3,9 / 2,6 | 2,0 / 1,3 |
+| Comunidad | 1,2 / 2,2 | 1,6 / 1,7 |
+| Inscripción | 2,7 / 1,7 | 2,2 / 1,5 |
+| Preguntas | 1,3 / 1,3 | 1,1 / 1,2 |
+| Pie | 2,0 / 1,4 | 0,9 / 0,6 |
+| **Total** | **21,9 / 19,3** (18.461 px / 14.805 px) | **16,4 / 12,4** (13.855 px / 9.499 px) |
+
+Meta (≤ 17 / ≤ 14) cumplida. Por encima de su meta propia: Carriles en 1366 (1,6, meta 1,5). Comunidad crece en móvil (1,2 → 1,6) por la franja de hechos e Instagram, que sustituyen a los testimonios ocultos.
+
+### Responsive, accesibilidad y flujos
+- `qa:medir`: Chromium en los nueve anchos y WebKit y Firefox en 375 y 1280: 0 scroll horizontal, 0 desbordes, 0 titulares cortados, 0 táctiles < 44 px, un `h1`. axe (WCAG 2.2 AA) 0 violaciones en 375 y 1280.
+- `qa:flujos`: 37/37. Nuevas: pasos en fila con foto, estado intermedio y enlace de respaldo al enviar, contexto compartido hero → horarios → formulario, filtros que hablan en los tres programas, turno → formulario con sucursal y hora, resumen con primer mes, la elección sobrevive a recargar, regla de colores de las acciones y texto único de la acción principal, y en WebKit y Firefox: nada queda con opacidad 0 tras recorrer, contexto y pestañas funcionan, sin errores de JS.
+
+### Rendimiento (`qa:rendimiento`, 390 px, Slow 4G, CPU 4×, 5 corridas)
+| | Antes (0bd216b) | Después |
+|---|---|---|
+| LCP (mediana) | 1.184 ms (titular) | 1.232 ms (titular) |
+| CLS | 0 | 0 |
+| JS | 159 KB | 162 KB |
+| Imágenes | 653 KB | 485 KB |
+| CSS | 13 KB | 15 KB |
+
+- El LCP llegó a 1,48 s cuando la foto del hero asomaba más que el titular en móvil (pasó a ser el elemento LCP). Se ajustó el tamaño del titular y la distancia a la foto: vuelve a ser el titular y la foto sigue asomando. La diferencia restante (+48 ms) está dentro del ruido de corridas consecutivas en esta máquina.
+- CLS: la barra del pulgar cambiaba 3–6 px de alto o ancho al adaptarse a la sección; se fijaron alto y columnas.
+- JS +3 KB: código del recorrido (contexto compartido, correspondencia de categorías, horas, transiciones). Pendiente de visto bueno.
+
 ## No verificado
 - Rendimiento (LCP, peso) después de la segunda ronda: las cifras de la tabla de arriba son de la primera.
 - Lighthouse oficial (no está instalado); se midió con Playwright + `PerformanceObserver`.
-- Safari/iOS real y Firefox: los efectos scroll-driven no corren allí y deberían quedarse quietos (diseñado así, sin probar en esos navegadores).
+- Safari/iOS real: se probó con el WebKit de Playwright (no es un iPhone). Firefox, con el de Playwright.
 - Lector de pantalla real (NVDA/VoiceOver): solo axe y pruebas de teclado.
 - Horarios reales de mcswim-admin: se usaron datos de ejemplo.

@@ -20,7 +20,7 @@ Versión experimental y **solo local**. No se ha hecho push ni despliegue. `main
 - **Sin `framer-motion`**: todo el movimiento es CSS. Ver `ANIMACIONES.md`.
 - **Contenido tipado y validado con zod** en `src/content/*`: un dato inválido rompe el build. Teléfono, WhatsApp, sucursales y días en un solo lugar (`site.ts`).
 - **Sin Lenis**: el scroll nativo es más liviano y accesible.
-- **Imágenes**: las dos PNG de ~1 MB (que eran fotos) pasaron a JPEG con nombre nuevo (`clase-tabla-coach.jpg`, `comunidad-utesa.jpg`). Se borraron los SVG de la plantilla de Next que no se usaban. `images.qualities` declarado (obligatorio en Next 16); las fotos usan calidad 60 y blur placeholder.
+- **Imágenes**: las dos PNG de producción (`Archivo_000.png`, `27-de-febrero.png`) son PNG de paleta (256 colores) y se ven degradadas. En la ronda 3 se regeneraron como JPEG desde los originales de la raíz del repo (4096 px, a todo color) con la receta del `README.md`: `clase-tabla-coach-2026.jpg` (263 KB) y `grupo-alumnos-2026.jpg` (463 KB). Las PNG salieron de `public/`. Se borraron los SVG de la plantilla de Next que no se usaban. `images.qualities` declarado (obligatorio en Next 16); las fotos usan calidad 60 y blur placeholder.
 - **SEO**: OG generada (`opengraph-image.tsx`), JSON-LD (SportsOrganization + 2 SportsActivityLocation + FAQPage), `sitemap.xml`, `robots.txt` (bloquea `/styleguide`).
 - **Horarios**: la lógica de la API no se tocó (revalidate 60 s, timeout 4 s, respaldo). Solo se rediseñó `SchedulesClient.tsx` (mismo archivo, mismos tipos), que ahora agrupa por día.
 
@@ -84,6 +84,20 @@ Un commit local por fase sobre el punto de partida `0bd216b`. Medidas antes/desp
 - **Tres tratamientos con criterio de uso** (`globals.css`, `/styleguide`): sticker para personas, agua (a sangre con borde en ola) para los planos de piscina de los pasos, y plana para la foto de grupo, que nunca se recorta.
 - **Boya** reservado para "Reservar mi cupo" y el aviso "Hoy". Salen de boya: la etiqueta "Nueva" (turquesa), el paso activo (ya no existe), el bloque "¿No encuentras tu horario?" (ahora una línea con el botón de WhatsApp), el subrayado de la sección activa y el final de la barra de progreso.
 - **Ritmo**: secuencia de tonos abismo → espuma → piscina → marino → espuma (pizarra abismo) → abismo → blanco → marino → espuma → abismo. El tramo azul de Carriles bajó de 3 a 1,6 pantallas en 1366; los rellenos verticales pasaron de `py-20/28` a `py-14/20` o `py-16/24`.
+
+### Fase 4: movimiento con intención
+Inventario en `ANIMACIONES.md` (sección "Ronda 3"). Descartado: la máscara de ola en las fotos a sangre.
+
+### Fase 5: deudas y verificación
+- Las dos PNG de paleta se regeneraron como JPEG desde los originales (ver "Imágenes" arriba).
+- `qa:medir` y `qa:flujos` corren también en WebKit y Firefox; `qa:medir` imprime el alto por sección contra la línea de base (`scripts/qa/alturas.mjs`). Cifras en `QA.md`.
+
+### Decisiones que necesitan visto bueno
+- **Fotos fuera de producción**: el 2026-11-14 se dejaron solo las de producción; esta ronda vuelve a usar `MCB07464`, `GM106022` y `02488C2A` (lo pide el encargo). "Por qué" sigue con la de producción.
+- **JS +3 KB** por el recorrido compartido.
+- **Acción principal = formulario** (y no WhatsApp directo).
+- **"Punto principal" eliminado** de Sucursales.
+- `TODO_CLIENTE`: testimonios reales, dirección y Maps de Prado Oriental y Estadio Olímpico (siguen pendientes, no se tocaron).
 
 ## Cambios de contenido que conviene revisar
 - `TODO_CLIENTE` **Testimonios**: no consta que sean reales. Están marcados `esEjemplo` y solo se ven en desarrollo, con la etiqueta "Ejemplo, falta confirmar". En producción no saldrían.

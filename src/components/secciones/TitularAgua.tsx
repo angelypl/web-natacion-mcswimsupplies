@@ -33,7 +33,7 @@ export function TitularAgua({ lineas }: { lineas: [string, string] }) {
   );
 
   return (
-    <h1 className="relative pr-[0.06em] font-display text-[clamp(5.5rem,0.5rem+26vw,7.5rem)] font-extrabold leading-[0.84] sm:text-display-2xl lg:text-[clamp(6rem,1.5rem+7vw,10.5rem)] uppercase tracking-[-0.015em] motion-safe:animate-[subir_900ms_var(--ease-out-expo)_both]">
+    <h1 className="relative pr-[0.06em] font-display text-[clamp(5.5rem,0.5rem+27.5vw,7.5rem)] font-extrabold leading-[0.84] sm:text-display-2xl lg:text-[clamp(6rem,1.5rem+7vw,10.5rem)] uppercase tracking-[-0.015em] motion-safe:animate-[subir_900ms_var(--ease-out-expo)_both]">
       <span className="block text-espuma-50" style={ENCIMA}>
         {texto}
       </span>

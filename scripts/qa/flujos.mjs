@@ -1,6 +1,6 @@
 // QA de flujos: sin JS, reveal, formulario, pestañas y menú móvil.
 //   node scripts/qa/flujos.mjs [url]
-import { chromium } from "playwright";
+import { chromium, firefox, webkit } from "playwright";
 
 const URL_BASE = process.argv[2] ?? "http://localhost:3002/";
 const b = await chromium.launch();
@@ -224,6 +224,44 @@ const ok = (condicion, mensaje) => {
   ok(reglas.malos.length === 0, `colores de acciones: ${reglas.malos.length} fuera de regla ${reglas.malos.slice(0, 4).join(" | ")}`);
   ok(reglas.textos.length === 1 && reglas.textos[0] === "Reservar mi cupo", `acción principal con un solo texto: ${reglas.textos.join(" / ")}`);
   await ctx.close();
+}
+
+// 8. WebKit (iPhone) y Firefox: sin scroll-driven ni (en Firefox) View
+//    Transitions, todo debe quedar quieto y visible y el recorrido funcionar.
+for (const [nombre, motor] of [["webkit", webkit], ["firefox", firefox]]) {
+  let nav;
+  try {
+    nav = await motor.launch();
+  } catch (e) {
+    ok(false, `${nombre}: no se pudo abrir (${String(e).split("\n")[0]})`);
+    continue;
+  }
+  const ctx = await nav.newContext({ viewport: { width: 390, height: 844 } });
+  const p = await ctx.newPage();
+  const errores = [];
+  p.on("pageerror", (e) => errores.push(String(e)));
+  await p.goto(URL_BASE, { waitUntil: "networkidle" });
+  for (let y = 0; y < 16000; y += 600) {
+    await p.evaluate((yy) => window.scrollTo(0, yy), y);
+    await p.waitForTimeout(60);
+  }
+  await p.waitForTimeout(1500);
+  const ocultos = await p.evaluate(() =>
+    [...document.querySelectorAll("main *")].filter(
+      (e) => getComputedStyle(e).opacity === "0" && !e.closest("[aria-hidden='true']") && e.getBoundingClientRect().height > 0,
+    ).length,
+  );
+  ok(ocultos === 0, `${nombre}: tras recorrer, elementos con opacidad 0 = ${ocultos}`);
+  await p.evaluate(() => window.scrollTo(0, 0));
+  await p.getByRole("link", { name: /Jóvenes y adultos/ }).first().click();
+  await p.waitForTimeout(900);
+  const filtro = await p.getByRole("group", { name: "Filtrar por programa" }).locator("[aria-pressed='true']").textContent();
+  await p.getByRole("tab", { name: "Prado Oriental" }).click();
+  await p.waitForTimeout(500);
+  const pestana = (await p.getByRole("tab", { selected: true }).textContent())?.trim();
+  ok(/^Adultos/.test(filtro ?? "") && pestana === "Prado Oriental", `${nombre}: contexto y pestañas (filtro "${filtro}", pestaña "${pestana}")`);
+  ok(errores.length === 0, `${nombre}: errores de JS ${errores.length} ${errores.join(" | ").slice(0, 200)}`);
+  await nav.close();
 }
 
 await b.close();
