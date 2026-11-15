@@ -57,6 +57,14 @@ La referencia viva está en `/styleguide` (noindex). Los tokens están en `@them
 - `Gotas`: salpicadura del logo.
 - `PatronCarriles`: líneas de carril a ~6 % de opacidad en fondos marino.
 
+### Acciones (jerarquía y color)
+- **Verde WhatsApp** (`boton-wa`, o el ícono en círculo `bg-whatsapp` en enlaces de texto) = sale de la web hacia WhatsApp. Siempre y solo eso: nada que se quede en la página va en verde, y todo enlace a WhatsApp lleva el verde.
+- **Boya** (`claseBoton("boya")`) = la acción principal dentro de la página: llevar al formulario. Texto único: **"Reservar mi cupo"** (`ACCION_PRINCIPAL` en `layout/navegacion.ts`). No se usa boya para nada que salga de la página.
+- **Contorno / texto subrayado** = acciones secundarias: "Ver horarios de…", "Cómo llegar", "Llamar".
+- Verbos distintos solo cuando la acción es distinta: "Preguntar" (WhatsApp), "Lista de espera" (WhatsApp, turno lleno), "Reservar este turno" (al formulario con el turno puesto), "Cómo llegar" (Maps).
+- Un solo acceso persistente por ancho: cabecera en ≥ 640 px; barra del pulgar en móvil.
+- `qa:flujos` comprueba la regla (colores y texto único de la acción principal).
+
 ### Reglas
 - Los programas son **carriles** (Carril 1: 2–3 años, Carril 2: 4+ años, Carril 3: adultos). Los números de carril solo se usan ahí y en los pasos de inscripción (secuencias reales).
 - Nada de eyebrow en mayúsculas sobre cada título, ni `→` al final de cada botón, ni la misma tarjeta repetida en todas las secciones.

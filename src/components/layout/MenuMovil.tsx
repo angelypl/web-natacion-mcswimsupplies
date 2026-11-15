@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { Menu, MessageCircle, Phone, X } from "lucide-react";
+import { ArrowRight, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { claseBoton } from "@/components/ui/Boton";
 import { cn } from "@/lib/cn";
+import { ACCION_PRINCIPAL } from "./navegacion";
 
 type Props = {
   items: readonly { nombre: string; href: string }[];
@@ -102,12 +103,10 @@ export default function MenuMovil({ items, whatsapp, telefono }: Props) {
                 <a
                   href={item.href}
                   onClick={cerrar}
-                  className="flex min-h-16 items-center justify-between gap-4 font-display text-display-md font-extrabold uppercase active:text-turquesa-400"
+                  className="flex min-h-14 items-center justify-between gap-4 font-display text-display-md font-extrabold uppercase active:text-turquesa-400"
                 >
                   {item.nombre}
-                  <span aria-hidden className="font-display text-xl tabular-nums text-turquesa-400">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <ArrowRight aria-hidden className="size-6 text-turquesa-400" />
                 </a>
               </li>
             ))}
@@ -115,20 +114,19 @@ export default function MenuMovil({ items, whatsapp, telefono }: Props) {
         </nav>
 
         <div className="menu-item mt-auto grid gap-3 pt-8" style={{ "--i": items.length } as CSSProperties}>
-          <a
-            href={whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={cerrar}
-            className={claseBoton("boya", "w-full")}
-          >
-            <MessageCircle aria-hidden className="size-5" />
-            Reservar mi cupo por WhatsApp
+          <a href="#inscripcion" onClick={cerrar} className={claseBoton("boya", "w-full")}>
+            {ACCION_PRINCIPAL}
           </a>
-          <a href={telefono.href} onClick={cerrar} className={claseBoton("contorno", "w-full")}>
-            <Phone aria-hidden className="size-5" />
-            Llamar al {telefono.visible}
-          </a>
+          <div className="grid grid-cols-2 gap-3">
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" onClick={cerrar} className="boton-wa px-4">
+              <MessageCircle aria-hidden className="size-5" />
+              WhatsApp
+            </a>
+            <a href={telefono.href} onClick={cerrar} className={claseBoton("contorno", "px-4")}>
+              <Phone aria-hidden className="size-5" />
+              Llamar
+            </a>
+          </div>
         </div>
       </div>
     </div>

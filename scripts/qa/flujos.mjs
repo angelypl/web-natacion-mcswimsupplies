@@ -85,7 +85,10 @@ const ok = (condicion, mensaje) => {
   const telefono = destino.searchParams.get("phone") ?? destino.pathname;
   ok(telefono.includes("18298830129"), `abre WhatsApp al 18298830129 (${destino.host})`);
   ok(texto.includes("Ana Pérez") && texto.includes("Asma leve") && texto.includes("Formación"), "el mensaje lleva nombre, comentario y programa");
+  ok(await p.getByRole("button", { name: /Abriendo WhatsApp/ }).isVisible(), "estado intermedio: el botón dice \"Abriendo WhatsApp…\"");
+  await p.getByText("Listo. Abrimos WhatsApp").waitFor({ timeout: 3000 }).catch(() => {});
   ok(await p.getByText("Listo. Abrimos WhatsApp").isVisible(), "confirmación visible (aria-live)");
+  ok(await p.getByRole("link", { name: "Abrir WhatsApp de nuevo" }).isVisible(), "enlace de respaldo por si WhatsApp no se abrió");
   await ctx.close();
 }
 
@@ -120,7 +123,7 @@ const ok = (condicion, mensaje) => {
   await p.goto(URL_BASE, { waitUntil: "networkidle" });
 
   ok(!(await p.locator(".barra-movil").isVisible()), "barra móvil oculta sobre el hero");
-  await p.locator("a[href='#carril-3']").first().click();
+  await p.locator("a[href$='#carril-3']").first().click();
   await p.waitForTimeout(1500);
   const arriba = await p.locator("#carril-3").evaluate((el) => Math.round(el.getBoundingClientRect().top));
   ok(arriba >= 0 && arriba < 200, `"¿Quién va a nadar?" lleva al carril 3 (top=${arriba})`);
@@ -141,15 +144,78 @@ const ok = (condicion, mensaje) => {
   await p.locator("#inscripcion form").evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
   await p.waitForTimeout(1200);
   ok(!(await p.locator(".barra-movil").isVisible()), "barra móvil se retira en el formulario");
-  await p.getByRole("radio", { name: /Adultos/ }).check();
+  await p.getByRole("radio", { name: /Adultos/ }).click();
+  await p.waitForTimeout(400);
   const utesa = p.getByRole("radio", { name: /Utesa/ });
   const vivirmas = p.getByRole("radio", { name: /VivirMás/ });
   ok((await utesa.isChecked()) && (await vivirmas.isDisabled()), "Adultos: marca Utesa y deshabilita VivirMás");
-  await p.getByRole("radio", { name: /Iniciación/ }).check();
+  await p.getByRole("radio", { name: /Iniciación/ }).click();
+  await p.waitForTimeout(400);
   ok((await vivirmas.isChecked()) && (await utesa.isDisabled()), "Iniciación: pasa sola a VivirMás");
   await p.fill("#telefono", "8295551234");
   await p.locator("#nombre").focus();
   ok((await p.inputValue("#telefono")) === "(829) 555-1234", `teléfono se formatea al salir: ${await p.inputValue("#telefono")}`);
+  await ctx.close();
+}
+
+// 7. Un solo recorrido: el contexto compartido (programa, sucursal, turno) viaja
+//    del hero a horarios y al formulario; los colores de las acciones siguen la regla.
+{
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const p = await ctx.newPage();
+  await p.goto(URL_BASE, { waitUntil: "networkidle" });
+  await p.getByRole("link", { name: /Jóvenes y adultos/ }).first().click();
+  await p.waitForTimeout(900);
+  ok(new URL(p.url()).searchParams.get("programa") === "adultos", `hero → URL con programa=adultos (${new URL(p.url()).search})`);
+  const filtro = p.getByRole("group", { name: "Filtrar por programa" }).locator("[aria-pressed='true']");
+  ok(/^Adultos/.test((await filtro.textContent()) ?? ""), `hero → horarios filtrados en Adultos (${await filtro.textContent()})`);
+  ok((await p.locator("input[name=programa]:checked").inputValue()) === "adultos", "hero → formulario marcado en Adultos");
+
+  // Correspondencia de categorías: el filtro habla en los programas de la web.
+  const nombres = await p.getByRole("group", { name: "Filtrar por programa" }).getByRole("button").allTextContents();
+  const permitidos = /^(Todos|Iniciación|Formación|Adultos)\d+$/;
+  ok(nombres.every((n) => permitidos.test(n.trim())), `filtros = programas de la web: ${nombres.join(", ")}`);
+
+  // Del turno al formulario con día, hora y sucursal puestos.
+  await p.getByRole("tab", { name: "Prado Oriental" }).click();
+  await p.waitForTimeout(400);
+  await p.getByRole("link", { name: /Reservar este turno/ }).first().click();
+  await p.waitForTimeout(1200);
+  const sucursal = await p.locator("input[name=sucursal]:checked").inputValue();
+  const horario = await p.inputValue("#horario");
+  ok(sucursal === "prado-oriental" && /sábado, 7:00 a\. m\./.test(horario), `turno → formulario (${sucursal}, "${horario}")`);
+  const resumen = (await p.locator(".resumen").innerText()).replace(/\s+/g, " ");
+  ok(/Prado Oriental/.test(resumen) && /RD\$3,500/.test(resumen), "resumen con sucursal y primer mes (RD$2,500 + RD$1,000)");
+
+  // Recargar conserva la elección.
+  await p.reload({ waitUntil: "networkidle" });
+  await p.waitForTimeout(400);
+  ok(/sábado/.test(await p.inputValue("#horario")), "al recargar se conserva el turno");
+
+  // Regla de colores: verde solo para WhatsApp; boya solo para lo que se queda en la página.
+  const reglas = await p.evaluate(() => {
+    const verde = "rgb(37, 211, 102)";
+    const boya = "rgb(244, 210, 60)";
+    const malos = [];
+    for (const a of document.querySelectorAll("a, button")) {
+      // "Saltar al contenido" es un atajo de teclado, no una acción.
+      if (a.closest("[aria-hidden='true']") || a.getAttribute("href") === "#contenido") continue;
+      const fondo = getComputedStyle(a).backgroundColor;
+      const href = a.getAttribute("href") ?? "";
+      const esWa = /wa\.me|whatsapp/.test(href) || a.type === "submit";
+      if (fondo === verde && !esWa) malos.push(`verde sin WhatsApp: ${a.textContent.trim().slice(0, 30)}`);
+      if (fondo === boya && esWa) malos.push(`boya hacia WhatsApp: ${a.textContent.trim().slice(0, 30)}`);
+      if (esWa && a.tagName === "A" && fondo !== verde && !a.querySelector(".bg-whatsapp") && getComputedStyle(a).display !== "inline")
+        malos.push(`WhatsApp sin verde: ${a.textContent.trim().slice(0, 30)}`);
+    }
+    const principales = [...document.querySelectorAll("a")].filter(
+      (a) => getComputedStyle(a).backgroundColor === boya && a.getAttribute("href") !== "#contenido",
+    );
+    const textos = [...new Set(principales.map((a) => a.textContent.trim()))];
+    return { malos, textos };
+  });
+  ok(reglas.malos.length === 0, `colores de acciones: ${reglas.malos.length} fuera de regla ${reglas.malos.slice(0, 4).join(" | ")}`);
+  ok(reglas.textos.length === 1 && reglas.textos[0] === "Reservar mi cupo", `acción principal con un solo texto: ${reglas.textos.join(" / ")}`);
   await ctx.close();
 }
 

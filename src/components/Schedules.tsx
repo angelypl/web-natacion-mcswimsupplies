@@ -1,3 +1,4 @@
+import { OPCIONES_PROGRAMAS, OPCIONES_SEDES } from "@/content/opciones";
 import { SITE } from "@/content/site";
 import SchedulesClient, { type BranchSchedule } from "./SchedulesClient";
 
@@ -77,6 +78,8 @@ export default async function Schedules() {
       branches={branches ?? []}
       unavailable={branches === null}
       whatsapp={SITE.whatsapp.numero}
+      programas={OPCIONES_PROGRAMAS}
+      sedes={OPCIONES_SEDES}
     />
   );
 }

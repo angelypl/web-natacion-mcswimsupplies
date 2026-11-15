@@ -55,6 +55,20 @@ Horarios enviados por la academia:
 - **En producción estos horarios hay que cargarlos en mcswim-admin**: la web los lee de su API. En local están en `scripts/qa/mock-horarios.mjs`, junto a los de ejemplo de Utesa y VivirMás. Para el Estadio, escribir la hora como `8:00 PM - 9:00 PM`.
 - `TODO_CLIENTE`: dirección exacta y enlace de Google Maps de las dos sedes (hoy el enlace busca el sector o el recinto), y confirmar que la inscripción vale en las cuatro ("Acceso a todas las sucursales").
 
+## Tercera ronda: recorrido, jerarquía, pulido y movimiento (2026-11-15)
+
+Un commit local por fase sobre el punto de partida `0bd216b`. Medidas antes/después en `QA.md`.
+
+### Fase 1: un solo recorrido
+- **Contexto compartido** (`src/lib/eleccion.ts`): programa, sucursal y turno viven en la URL (`?programa=adultos&sucursal=utesa&turno=Lunes|5:00 PM`). Sobrevive a recargar y viaja al compartir el enlace; no se guarda nada en el navegador. Los enlaces del servidor llevan `data-elegir` y los aplica `EleccionRoot` sin recargar (sin JS, el navegador carga esa URL y funciona igual). Hero, carriles, pestañas y filtro de horarios, tarjetas de sucursal y formulario leen y escriben lo mismo. En Horarios, "Tu elección" muestra lo elegido y deja quitar cada parte.
+- **Programas contra categorías de la API** (`src/content/categorias.ts`): reglas tolerantes que traducen "Infantil / Adultos", "Iniciación Temprana"… a Iniciación, Formación y Adultos. Un turno puede servir a dos programas; una categoría desconocida se muestra con su texto y solo queda fuera de los filtros. La API no cambia.
+- **Del turno a la reserva**: cada turno tiene "Reservar este turno" (lleva al formulario con programa, sucursal, día y hora puestos) y "Preguntar" por WhatsApp. El formulario muestra antes del botón un resumen: programa, sucursal, turno, mensualidad, inscripción y primer mes.
+- **Acción principal = el formulario** ("Reservar mi cupo", boya, a `#inscripcion`). Justificación: el formulario termina en el mismo WhatsApp, pero con nombre, teléfono, programa, sucursal, turno y nivel en un solo mensaje, así la academia puede confirmar en una respuesta en vez de preguntar dato por dato. Quien prefiere escribir directo tiene el verde de WhatsApp en cada sección.
+- **Regla de colores de las acciones** (en `sistema-visual-mcswim`): verde = sale a WhatsApp, siempre y solo eso; boya = la acción principal dentro de la página, siempre con el texto "Reservar mi cupo". Verbos distintos solo para acciones distintas: "Preguntar", "Lista de espera", "Cómo llegar", "Ver horarios de…". `qa:flujos` lo comprueba.
+- **Navegación**: "Carriles" → "Clases y precios" (el ancla `#carriles` y el concepto de carril siguen dentro), "Primera clase" → "Cómo empezar", y se añade "Inscripción" al menú móvil y al pie (en la cabecera de escritorio ya es el botón). El menú móvil pierde los números (el sistema los reserva para carriles y pasos).
+- **Un acceso persistente por ancho**: desde 640 px, solo "Reservar mi cupo" en la cabecera; el botón flotante de WhatsApp queda como respaldo en móvil sin JS. En móvil, la barra del pulgar tiene siempre "Reservar mi cupo" y a la izquierda un acceso que cambia con la sección (`html[data-seccion]`): "Horarios" en general y "Preguntar" (WhatsApp) mientras se está en Horarios.
+- **Sucursales y pizarra**: no se fundieron las fichas dentro de las pestañas de Horarios. En producción la API solo tiene hoy Utesa y VivirMás: si la ficha viviera en la pestaña, Prado Oriental y Estadio Olímpico desaparecerían de la página hasta que se carguen en mcswim-admin, y también con la API caída.
+
 ## Cambios de contenido que conviene revisar
 - `TODO_CLIENTE` **Testimonios**: no consta que sean reales. Están marcados `esEjemplo` y solo se ven en desarrollo, con la etiqueta "Ejemplo, falta confirmar". En producción no saldrían.
 - `TODO_CLIENTE` **Logo**: pedir SVG o PNG transparente. El JPEG tiene fondo blanco (va sobre una chapa blanca).

@@ -7,6 +7,7 @@ import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { SEMANA, SITE, type Sucursal } from "@/content/site";
 import { cn } from "@/lib/cn";
+import { enlaceEleccion } from "@/lib/eleccion-url";
 import { CLASES_TODA_LA_SEMANA, TEL_URL, enLetras, listaNatural, whatsappUrl } from "@/lib/contacto";
 
 /** Tira de la semana con los días de clase marcados. La lista accesible va aparte. */
@@ -89,7 +90,14 @@ export function Sucursales() {
                 </li>
               </ul>
 
-              <div className="mt-auto pt-8">
+              <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-8">
+                <a
+                  href={enlaceEleccion({ sucursal: s.id }, "#horarios")}
+                  data-elegir
+                  className="inline-flex min-h-11 items-center font-bold text-turquesa-400 underline decoration-2 underline-offset-4"
+                >
+                  Ver horarios de esta sucursal
+                </a>
                 <BotonLink
                   href={s.mapsUrl}
                   externo

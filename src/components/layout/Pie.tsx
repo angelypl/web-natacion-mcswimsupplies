@@ -36,11 +36,6 @@ export function Pie() {
                   </a>
                 </li>
               ))}
-              <li>
-                <a href="#inscripcion" className={enlace}>
-                  Inscripción
-                </a>
-              </li>
             </ul>
           </nav>
 
@@ -62,7 +57,9 @@ export function Pie() {
             <ul className="mt-3 text-tone-muted">
               <li>
                 <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className={enlace}>
-                  <MessageCircle aria-hidden className="size-4 text-turquesa-400" />
+                  <span className="grid size-6 place-items-center rounded-full bg-whatsapp text-marino-950">
+                    <MessageCircle aria-hidden className="size-3.5" />
+                  </span>
                   WhatsApp {SITE.telefono.visible}
                 </a>
               </li>

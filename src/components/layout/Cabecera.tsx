@@ -1,10 +1,9 @@
-import { MessageCircle } from "lucide-react";
 import { BotonLink } from "@/components/ui/Boton";
 import { SITE } from "@/content/site";
 import { TEL_URL, whatsappUrl } from "@/lib/contacto";
 import { Logo } from "./Logo";
 import MenuMovil from "./MenuMovil";
-import { NAV } from "./navegacion";
+import { ACCION_PRINCIPAL, NAV, NAV_CABECERA } from "./navegacion";
 
 // Transparente sobre el hero; el fondo aparece con el scroll por CSS
 // scroll-driven (.cabecera-fondo). Sin soporte, el fondo está siempre.
@@ -20,7 +19,7 @@ export function Cabecera() {
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-1">
-            {NAV.map((item) => (
+            {NAV_CABECERA.map((item) => (
               <li key={item.href}>
                 <a
                   href={item.href}
@@ -40,13 +39,12 @@ export function Cabecera() {
 
         <div className="flex items-center gap-2">
           <BotonLink
-            href={whatsappUrl()}
-            externo
+            href="#inscripcion"
+            data-nav
             variante="boya"
-            icono={<MessageCircle className="size-5" />}
-            className="hidden min-h-11 px-5 py-2.5 text-[0.95rem] sm:inline-flex"
+            className="onda hidden min-h-11 px-5 py-2.5 text-[0.95rem] sm:inline-flex"
           >
-            Reservar cupo
+            {ACCION_PRINCIPAL}
           </BotonLink>
           <MenuMovil
             items={NAV}

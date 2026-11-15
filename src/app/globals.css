@@ -177,6 +177,15 @@ p {
   text-wrap: pretty;
 }
 
+/* Botón de WhatsApp. Regla de color de las acciones (ver sistema-visual-mcswim):
+   verde = sale de la web hacia WhatsApp, siempre y solo eso; boya = la acción
+   principal dentro de la página ("Reservar mi cupo"). */
+@layer components {
+  .boton-wa {
+    @apply inline-flex min-h-12 items-center justify-center gap-2.5 rounded-pill bg-whatsapp px-6 py-3 font-bold text-marino-950 shadow-flota transition-[transform,box-shadow] duration-(--dur-base) ease-spring-soft hover:-translate-y-0.5 hover:shadow-hondo focus-visible:-translate-y-0.5 active:scale-[0.97];
+  }
+}
+
 /* ───────────────────────── Motion ───────────────────────── */
 
 @keyframes subir {
@@ -419,6 +428,16 @@ html[data-menu] .cabecera-fondo {
 html[data-barra] .barra-movil {
   transform: none;
   visibility: visible;
+}
+
+/* La barra se adapta a la sección: en Horarios, "Horarios" sobra y su sitio
+   lo toma "Preguntar" (WhatsApp). */
+html[data-seccion="horarios"] .barra-horarios {
+  display: none;
+}
+
+html[data-seccion="horarios"] .barra-preguntar {
+  display: inline-flex;
 }
 
 /* Con la barra activa, el botón flotante sobra en móvil. */

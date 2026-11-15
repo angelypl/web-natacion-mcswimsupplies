@@ -11,6 +11,7 @@ import { PorQue } from "@/components/secciones/PorQue";
 import { Preguntas } from "@/components/secciones/Preguntas";
 import { PrimeraClase } from "@/components/secciones/PrimeraClase";
 import { Sucursales } from "@/components/secciones/Sucursales";
+import EleccionRoot from "@/components/ui/EleccionRoot";
 import RevealRoot from "@/components/ui/RevealRoot";
 import ScrollEspia from "@/components/ui/ScrollEspia";
 import { NAV } from "@/components/layout/navegacion";
@@ -45,6 +46,7 @@ export default function Home() {
       <WhatsAppFlotante />
       <BarraMovil />
       <RevealRoot />
+      <EleccionRoot />
       <ScrollEspia secciones={SECCIONES} sinBarra={SIN_BARRA} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializar(jsonLdInicio()) }} />
     </>

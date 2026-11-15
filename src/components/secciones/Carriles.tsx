@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { Check, CreditCard, MapPin, MessageCircle } from "lucide-react";
+import { Check, CreditCard, MapPin } from "lucide-react";
 import { Corchera } from "@/components/brand/Corchera";
 import { LineaDeAgua } from "@/components/brand/LineaDeAgua";
 import { BotonLink } from "@/components/ui/Boton";
@@ -9,7 +9,10 @@ import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
 import { CARRILES, INSCRIPCION } from "@/content/programas";
 import { cn } from "@/lib/cn";
-import { formatoPesos, textoSucursales, whatsappUrl } from "@/lib/contacto";
+import { ACCION_PRINCIPAL } from "@/components/layout/navegacion";
+import { slugPrograma } from "@/content/opciones";
+import { formatoPesos, textoSucursales } from "@/lib/contacto";
+import { enlaceEleccion } from "@/lib/eleccion-url";
 
 // Los programas son carriles de la piscina: la sección es agua (azul
 // piscina) y cada programa está separado por una corchera.
@@ -104,15 +107,24 @@ export function Carriles() {
                         {formatoPesos(carril.mensualidad)}
                       </span>
                     </p>
-                    <BotonLink
-                      href={whatsappUrl(carril.mensajeWhatsapp)}
-                      externo
-                      variante="marino"
-                      icono={<MessageCircle className="size-5" />}
-                      aria-label={`Reservar ${carril.nombre} por WhatsApp`}
-                    >
-                      Reservar
-                    </BotonLink>
+                    <div className="flex flex-col items-end gap-1 lg:items-stretch">
+                      <BotonLink
+                        href={enlaceEleccion({ programa: slugPrograma(carril) }, "#inscripcion")}
+                        data-elegir
+                        variante="boya"
+                        className="onda"
+                        aria-label={`${ACCION_PRINCIPAL} en ${carril.nombre}`}
+                      >
+                        {ACCION_PRINCIPAL}
+                      </BotonLink>
+                      <a
+                        href={enlaceEleccion({ programa: slugPrograma(carril) }, "#horarios")}
+                        data-elegir
+                        className="inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4"
+                      >
+                        Ver horarios de {carril.nombre}
+                      </a>
+                    </div>
                   </div>
                 </article>
               </li>

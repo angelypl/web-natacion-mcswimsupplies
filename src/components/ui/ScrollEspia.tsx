@@ -14,6 +14,7 @@ type Props = {
 //   data-espia        → hay JS (el botón flotante cede el sitio a la barra móvil)
 //   data-scroll-dir   → "abajo" | "arriba" (la cabecera se esconde en móvil)
 //   data-barra        → la barra de acciones móvil está visible
+//   data-seccion      → id de la sección que se lee (la barra móvil se adapta)
 export default function ScrollEspia({ secciones, sinBarra = [] }: Props) {
   useEffect(() => {
     const raiz = document.documentElement;
@@ -47,6 +48,8 @@ export default function ScrollEspia({ secciones, sinBarra = [] }: Props) {
     const enlaces = Array.from(document.querySelectorAll<HTMLAnchorElement>("a[data-nav]"));
     const marcar = (id: string) => {
       seccion = id;
+      if (id) raiz.dataset.seccion = id;
+      else delete raiz.dataset.seccion;
       for (const a of enlaces) {
         if (a.getAttribute("href") === `#${id}`) a.setAttribute("aria-current", "true");
         else a.removeAttribute("aria-current");
@@ -86,6 +89,7 @@ export default function ScrollEspia({ secciones, sinBarra = [] }: Props) {
       delete raiz.dataset.espia;
       delete raiz.dataset.barra;
       delete raiz.dataset.scrollDir;
+      delete raiz.dataset.seccion;
     };
   }, [secciones, sinBarra]);
 

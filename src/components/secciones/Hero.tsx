@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown, Clock, MessageCircle } from "lucide-react";
+import { ArrowDown, Clock } from "lucide-react";
 import { Corchera } from "@/components/brand/Corchera";
 import { Gotas, LineaDeAgua, PatronCarriles } from "@/components/brand/LineaDeAgua";
 import { BotonLink } from "@/components/ui/Boton";
@@ -7,7 +7,10 @@ import { Etiqueta } from "@/components/ui/Etiqueta";
 import { FOTOS } from "@/content/fotos";
 import { CARRILES } from "@/content/programas";
 import { SITE } from "@/content/site";
-import { enLetras, whatsappUrl } from "@/lib/contacto";
+import { ACCION_PRINCIPAL } from "@/components/layout/navegacion";
+import { slugPrograma } from "@/content/opciones";
+import { enLetras } from "@/lib/contacto";
+import { enlaceEleccion } from "@/lib/eleccion-url";
 import { TitularAgua } from "./TitularAgua";
 
 
@@ -30,8 +33,8 @@ export function Hero() {
           </p>
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <BotonLink href={whatsappUrl()} externo variante="boya" icono={<MessageCircle className="size-5" />}>
-              Reservar mi cupo
+            <BotonLink href="#inscripcion" variante="boya" className="onda">
+              {ACCION_PRINCIPAL}
             </BotonLink>
             <BotonLink href="#horarios" variante="contorno" icono={<Clock className="size-5" />}>
               Ver horarios
@@ -47,7 +50,8 @@ export function Hero() {
               {CARRILES.map((carril) => (
                 <li key={carril.id}>
                   <a
-                    href={`#carril-${carril.numero}`}
+                    href={enlaceEleccion({ programa: slugPrograma(carril) }, `#carril-${carril.numero}`)}
+                    data-elegir
                     className="group/quien flex min-h-14 items-center gap-3 rounded-card border border-tone-line bg-marino-900/60 px-3.5 py-3 transition-[transform,background-color,border-color] duration-(--dur-base) ease-spring-soft hover:-translate-y-0.5 hover:border-turquesa-400 hover:bg-marino-800 focus-visible:-translate-y-0.5 focus-visible:border-turquesa-400 active:scale-[0.98]"
                   >
                     <span

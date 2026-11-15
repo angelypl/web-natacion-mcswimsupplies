@@ -6,6 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
 import { FOTOS } from "@/content/fotos";
 import { PASOS } from "@/content/pasos";
+import { ACCION_PRINCIPAL } from "@/components/layout/navegacion";
 import { whatsappUrl } from "@/lib/contacto";
 import FotosPasos from "./FotosPasos";
 
@@ -64,15 +65,22 @@ export function PrimeraClase() {
                 <p className="mt-3 max-w-xl text-tone-muted lg:mt-4 lg:text-lead">{paso.texto}</p>
 
                 {i === 0 && (
-                  <BotonLink
-                    href={whatsappUrl()}
-                    externo
-                    variante="boya"
-                    icono={<MessageCircle className="size-5" />}
-                    className="mt-6 self-start lg:mt-8"
-                  >
-                    Escribir por WhatsApp
-                  </BotonLink>
+                  <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 lg:mt-8">
+                    <BotonLink href="#inscripcion" variante="boya" className="onda">
+                      {ACCION_PRINCIPAL}
+                    </BotonLink>
+                    <a
+                      href={whatsappUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/wa inline-flex min-h-11 items-center gap-2 font-semibold"
+                    >
+                      <span className="grid size-8 place-items-center rounded-full bg-whatsapp text-marino-950 transition-transform duration-(--dur-base) ease-spring-soft group-hover/wa:-rotate-12">
+                        <MessageCircle aria-hidden className="size-4" />
+                      </span>
+                      o escríbenos por WhatsApp
+                    </a>
+                  </div>
                 )}
               </li>
             ))}

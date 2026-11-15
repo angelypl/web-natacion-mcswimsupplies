@@ -1,10 +1,14 @@
 import { Clock, MessageCircle } from "lucide-react";
 import { claseBoton } from "@/components/ui/Boton";
 import { whatsappUrl } from "@/lib/contacto";
+import { ACCION_PRINCIPAL } from "./navegacion";
 
-// Las dos acciones que más se buscan desde el celular, siempre al alcance del
-// pulgar. La muestra ScrollEspia (html[data-barra]); sin JS no aparece y queda
-// el botón flotante de WhatsApp.
+// Barra del pulgar en móvil: a la derecha, siempre la acción principal (boya,
+// al formulario). A la izquierda, un acceso que cambia con la sección que se
+// lee (html[data-seccion], lo escribe ScrollEspia):
+//   - en Horarios sobra "Horarios": pasa a preguntar por WhatsApp;
+//   - en el resto, "Horarios".
+// Sin JS no aparece y queda el botón flotante de WhatsApp.
 export function BarraMovil() {
   return (
     <div
@@ -13,13 +17,21 @@ export function BarraMovil() {
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2.5">
-        <a href="#horarios" className={claseBoton("contorno", "px-5")}>
+        <a href="#horarios" className={claseBoton("contorno", "barra-horarios px-5")}>
           <Clock aria-hidden className="size-5" />
           Horarios
         </a>
-        <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className={claseBoton("whatsapp")}>
+        <a
+          href={whatsappUrl("Hola MC Swim Academy, quiero preguntar por un horario.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="boton-wa barra-preguntar hidden px-5"
+        >
           <MessageCircle aria-hidden className="size-5" />
-          Reservar mi cupo
+          Preguntar
+        </a>
+        <a href="#inscripcion" className={claseBoton("boya", "onda")}>
+          {ACCION_PRINCIPAL}
         </a>
       </div>
     </div>
