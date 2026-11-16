@@ -22,7 +22,7 @@ export function Logo({ className, tamano = "md" }: { className?: string; tamano?
         <Image src={logo} alt="" sizes={tamano === "md" ? "56px" : "96px"} className="h-full w-full object-contain" />
       </span>
       <span className="flex flex-col leading-none">
-        <span className="font-display text-2xl font-extrabold uppercase tracking-wide">MC Swim</span>
+        <span className="font-display text-2xl font-extrabold uppercase tracking-wide">MC Swim Academy</span>
         <span className="text-xs font-semibold text-tone-muted">Academia de natación</span>
       </span>
     </a>
