@@ -28,10 +28,6 @@ export const metadataBase: Metadata = {
     type: "website",
     siteName: SITE.nombre,
   },
-  icons: {
-    icon: "/logo-mc-swim-academy-recorte.jpg",
-    apple: "/logo-mc-swim-academy-recorte.jpg",
-  },
 };
 
 /** Metadata de una página interna, heredando la base. */
