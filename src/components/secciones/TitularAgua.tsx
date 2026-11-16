@@ -1,15 +1,13 @@
 import type { CSSProperties } from "react";
 
-// La línea de agua pasa entre las dos líneas del titular, sin cortar letras:
-// arriba "Aprende" en espuma; debajo "a nadar" en turquesa, un poco
-// desplazada, como refractada. (Antes la ola cruzaba la segunda línea y las
-// puntas blancas de las letras se leían como un titular duplicado.) Son dos capas del mismo texto recortadas con máscaras SVG
+// La línea de agua cruza la segunda línea del titular. Arriba se lee en
+// espuma; debajo, la misma palabra en turquesa y un poco desplazada, como
+// refractada. Son dos capas del mismo texto recortadas con máscaras SVG
 // (preserveAspectRatio="none" las estira al tamaño del h1). Solo CSS.
 // La misma ola en los dos sentidos: de derecha a izquierda para cerrar las
 // máscaras y de izquierda a derecha para el trazo que se dibuja encima.
-// Ola suave centrada en y=49 (el hueco entre líneas está entre ~43 y ~54).
-const OLA = "C83 52 67 52 50 49S17 46 0 49";
-const TRAZO = "M0 49C17 46 33 46 50 49S83 52 100 49";
+const OLA = "C83 75 67 75 50 68S17 61 0 68";
+const TRAZO = "M0 68C17 61 33 61 50 68S83 75 100 68";
 const mascara = (d: string): CSSProperties => {
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='${d}'/></svg>`;
   const url = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
@@ -23,8 +21,8 @@ const mascara = (d: string): CSSProperties => {
   };
 };
 
-const ENCIMA = mascara(`M0 0H100V49${OLA}Z`);
-const DEBAJO = mascara(`M0 100H100V49${OLA}Z`);
+const ENCIMA = mascara(`M0 0H100V68${OLA}Z`);
+const DEBAJO = mascara(`M0 100H100V68${OLA}Z`);
 
 export function TitularAgua({ lineas }: { lineas: [string, string] }) {
   const texto = (
