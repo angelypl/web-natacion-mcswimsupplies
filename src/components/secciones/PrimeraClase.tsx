@@ -5,7 +5,7 @@ import { PatronCarriles } from "@/components/brand/LineaDeAgua";
 import { BotonLink } from "@/components/ui/Boton";
 import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
-import { FOTOS } from "@/content/fotos";
+import { FOTOS, type Foto } from "@/content/fotos";
 import { PASOS } from "@/content/pasos";
 import { whatsappUrl } from "@/lib/contacto";
 
@@ -45,7 +45,7 @@ export function PrimeraClase() {
           aria-label="Los cuatro pasos para empezar"
           className="pasos-lista sin-barra -mx-4 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:p-0">
           {PASOS.map((paso, i) => {
-            const foto = FOTOS[paso.foto];
+            const foto: Foto = FOTOS[paso.foto];
             return (
               <li
                 key={paso.titulo}
@@ -60,7 +60,7 @@ export function PrimeraClase() {
                     quality={60}
                     placeholder="blur"
                     sizes="(min-width: 1280px) 290px, (min-width: 1024px) 23vw, (min-width: 640px) 384px, 80vw"
-                    className="object-cover"
+                    className={`object-cover ${foto.foco ?? ""}`}
                   />
                 </div>
                 <div className="flex flex-1 flex-col pt-4">

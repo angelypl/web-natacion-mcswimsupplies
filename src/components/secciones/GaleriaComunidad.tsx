@@ -101,7 +101,7 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
             <li
               key={f.alt}
               className={cn(
-                "galeria-tira w-[58vw] max-w-60 shrink-0 snap-center sm:w-56",
+                "galeria-tira w-[78vw] max-w-80 shrink-0 snap-center sm:w-72",
                 i % 2 === 0 ? "-rotate-1" : "rotate-1 translate-y-3",
               )}
             >
@@ -111,15 +111,15 @@ export function GaleriaComunidad({ fotos }: { fotos: Foto[] }) {
                 aria-label={`Ver en grande: ${f.alt}`}
                 className="group block w-full cursor-zoom-in rounded-card border-[5px] border-espuma-50 bg-espuma-50 text-left shadow-flota transition-[transform,box-shadow] duration-(--dur-lenta) ease-spring-soft hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-hondo focus-visible:-translate-y-1.5 active:scale-[0.98]"
               >
-                <span className="relative block aspect-[4/5] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
+                <span className="relative block aspect-[4/3] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
                   <Image
                     src={f.src}
                     alt=""
                     fill
                     quality={60}
                     placeholder="blur"
-                    sizes="(min-width: 640px) 224px, 58vw"
-                    className="object-cover transition-transform duration-(--dur-escena) ease-out-expo group-hover:scale-105"
+                    sizes="(min-width: 640px) 288px, 78vw"
+                    className={cn("object-cover transition-transform duration-(--dur-escena) ease-out-expo group-hover:scale-105", f.foco)}
                   />
                   <span
                     aria-hidden

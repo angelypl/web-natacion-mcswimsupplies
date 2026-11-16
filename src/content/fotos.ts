@@ -15,11 +15,14 @@ import adultos from "../../public/91559E05-DA44-45B9-9DB4-EDBE0E1853A8.jpeg";
 import tablaCoach from "../../public/clase-tabla-coach-2026.jpg";
 import comunidad from "../../public/grupo-alumnos-2026.jpg";
 
-export type Foto = { src: StaticImageData; alt: string };
+// `foco`: dónde está la gente en la foto (clase object-position). Los marcos
+// con object-cover recortan alrededor de ese punto en vez del centro.
+export type Foto = { src: StaticImageData; alt: string; foco?: string };
 
 export const FOTOS = {
   clavado: {
     src: clavado,
+    foco: "object-[50%_60%]",
     alt: "Alumno lanzándose de clavado en un carril de la piscina semiolímpica, con otros nadadores al fondo",
   },
   sonrisaFideo: {
@@ -28,6 +31,7 @@ export const FOTOS = {
   },
   coachNino: {
     src: coachNino,
+    foco: "object-[50%_4%]",
     alt: "Niño con lentes nadando hacia el Coach Franklin en el agua",
   },
   equipoBorde: {

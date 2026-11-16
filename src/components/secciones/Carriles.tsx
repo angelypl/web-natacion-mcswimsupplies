@@ -8,7 +8,7 @@ import { BotonLink } from "@/components/ui/Boton";
 import { Cifra } from "@/components/ui/Cifra";
 import { Section } from "@/components/ui/Section";
 import { Titular } from "@/components/ui/Titular";
-import { FOTOS } from "@/content/fotos";
+import { FOTOS, type Foto } from "@/content/fotos";
 import { primerMes, slugPrograma } from "@/content/opciones";
 import { CARRILES, INSCRIPCION } from "@/content/programas";
 import { cn } from "@/lib/cn";
@@ -49,7 +49,7 @@ export function Carriles() {
 
         <ol className="mt-8 grid grid-cols-1 lg:mt-10 lg:grid-cols-[minmax(0,1fr)_1.5rem_minmax(0,1fr)_1.5rem_minmax(0,1fr)] lg:gap-x-5">
           {CARRILES.map((carril, i) => {
-            const foto = FOTOS[carril.foto];
+            const foto: Foto = FOTOS[carril.foto];
             const slug = slugPrograma(carril);
             return (
               <li key={carril.id} className="contents">
@@ -73,7 +73,7 @@ export function Carriles() {
                           i % 2 === 0 ? "-rotate-[1.2deg]" : "rotate-[1.2deg]",
                         )}
                       >
-                        <div className="relative aspect-[2/1] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
+                        <div className="relative aspect-[3/2] overflow-hidden rounded-[calc(var(--radius-card)-5px)]">
                           <Image
                             src={foto.src}
                             alt={foto.alt}
@@ -81,7 +81,7 @@ export function Carriles() {
                             quality={60}
                             placeholder="blur"
                             sizes="(min-width: 1280px) 380px, (min-width: 1024px) 30vw, 92vw"
-                            className="object-cover"
+                            className={cn("object-cover", foto.foco)}
                           />
                         </div>
                       </div>
